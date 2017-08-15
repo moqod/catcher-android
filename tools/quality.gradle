@@ -22,6 +22,5 @@ sonarqube {
         property "sonar.java.libraries", libraries
         property "sonar.android.lint.report", "build/reports/lint/lint-results.xml"
         property "sonar.jacoco.reportPath","build/jacoco/testDebugUnitTest.exec"
-        property "sonar.jacoco.itReportPath", instrumentationFileName
     }
 }
