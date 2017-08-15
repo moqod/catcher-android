@@ -20,7 +20,5 @@ stages:
 check:
   stage: check
   script: ./check.sh
-  only:
-    - develop
   tags:
   - docker
