@@ -1,4 +1,4 @@
-package com.moqod.android.shaker;
+package com.moqod.android.shaker.sample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

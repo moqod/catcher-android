@@ -1,0 +1,26 @@
+image: jerbob92/gitlab-ci-android:latest
+
+before_script:
+- if [ ! -d "/cache$ANDROID_HOME" ]; then mv $ANDROID_HOME /cache$ANDROID_HOME; fi
+- export ANDROID_HOME=/cache$ANDROID_HOME
+- export GRADLE_USER_HOME=`pwd`/.gradle
+- mkdir -p $GRADLE_USER_HOME
+- chmod +x ./gradlew
+- chmod +x ./check.sh
+
+cache:
+  key: ${CI_PROJECT_ID}
+  paths:
+  - .gradle/wrapper
+  - .gradle/caches
+
+stages:
+- check
+
+check:
+  stage: check
+  script: ./check.sh
+  only:
+  - develop
+  tags:
+  - docker

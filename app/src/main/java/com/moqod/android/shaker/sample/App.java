@@ -1,6 +1,7 @@
-package com.moqod.android.shaker;
+package com.moqod.android.shaker.sample;
 
 import android.app.Application;
+import com.moqod.android.shaker.Shaker;
 
 /**
  * Created with IntelliJ IDEA.
