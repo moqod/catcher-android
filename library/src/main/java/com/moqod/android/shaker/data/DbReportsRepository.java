@@ -57,6 +57,9 @@ public class DbReportsRepository implements ReportsRepository {
             } else {
                 id = (int) mDb.insert(ReportTable.NAME, null, contentValues);
             }
+            if (cursor != null) {
+                cursor.close();
+            }
         } else {
             id = (int) mDb.insert(ReportTable.NAME, null, contentValues);
         }
