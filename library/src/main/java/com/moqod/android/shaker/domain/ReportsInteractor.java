@@ -2,6 +2,7 @@ package com.moqod.android.shaker.domain;
 
 import android.app.Activity;
 import android.util.Log;
+import com.moqod.android.shaker.utils.ActivityInfoProvider;
 import com.moqod.android.shaker.utils.NotificationHelper;
 import com.moqod.android.shaker.utils.ScreenShotHelper;
 import io.reactivex.Completable;
@@ -25,12 +26,14 @@ public class ReportsInteractor {
     private ReportsRepository mReportsRepository;
     private NotificationHelper mNotificationHelper;
     private ScreenShotHelper mScreenShotHelper;
+    private ActivityInfoProvider<DeviceInfoModel> mDeviceInfoProvider;
 
     public ReportsInteractor(ReportsRepository reportsRepository, NotificationHelper notificationHelper,
-                             ScreenShotHelper screenShotHelper) {
+                             ScreenShotHelper screenShotHelper, ActivityInfoProvider<DeviceInfoModel> deviceInfoProvider) {
         mReportsRepository = reportsRepository;
         mNotificationHelper = notificationHelper;
         mScreenShotHelper = screenShotHelper;
+        mDeviceInfoProvider = deviceInfoProvider;
     }
 
     public void createReport(Activity activity) {

@@ -6,6 +6,7 @@ import com.moqod.android.shaker.data.ReportMapper;
 import com.moqod.android.shaker.data.db.DbOpenHelper;
 import com.moqod.android.shaker.domain.ReportsInteractor;
 import com.moqod.android.shaker.domain.ReportsRepository;
+import com.moqod.android.shaker.utils.DeviceInfoProvider;
 import com.moqod.android.shaker.utils.NotificationHelper;
 import com.moqod.android.shaker.utils.ScreenShotHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -58,7 +59,7 @@ public class Injector {
     }
 
     public ReportsInteractor getReportsInteractor() {
-        return new ReportsInteractor(getReportsRepository(), getNotificationHelper(), new ScreenShotHelper());
+        return new ReportsInteractor(getReportsRepository(), getNotificationHelper(), new ScreenShotHelper(), new DeviceInfoProvider());
     }
 
     private NotificationHelper getNotificationHelper() {
