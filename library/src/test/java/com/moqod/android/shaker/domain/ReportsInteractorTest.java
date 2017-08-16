@@ -43,6 +43,18 @@ public class ReportsInteractorTest {
         verify(mMockNotificationHelper).issueNotification(TestReport.UNKNOWN_ID);
     }
 
+    @Test
+    public void testDeleteReport() throws Exception {
+        ReportsRepository reportsRepository = mock(ReportsRepository.class);
+
+        mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
+                mMockScreenShotHelper);
+
+        mReportsInteractor.deleteReport(TestReport.UNKNOWN_ID);
+
+        verify(reportsRepository).delete(TestReport.UNKNOWN_ID);
+    }
+
     private ScreenShotHelper createMockScreenShotHelper() {
         ScreenShotHelper screenShotHelper = mock(ScreenShotHelper.class);
         when(screenShotHelper.takeScreenShot(null)).thenReturn(TEST_IMAGE_URI);

@@ -42,4 +42,8 @@ public class ReportsInteractor {
     public void sendReport(int reportId) {
 
     }
+
+    public void deleteReport(int reportId) {
+        mReportsRepository.delete(reportId);
+    }
 }

@@ -31,12 +31,17 @@ public class NotificationHelper {
         PendingIntent sendReportIntent =
                 PendingIntent.getService(mContext, 1, SendReportService.getIntent(mContext, reportId), PendingIntent.FLAG_UPDATE_CURRENT);
 
+        PendingIntent deleteReportIntent =
+                PendingIntent.getService(mContext, 2, DeleteReportService.getIntent(mContext, reportId), PendingIntent.FLAG_UPDATE_CURRENT);
+
         Notification notification = new NotificationCompat.Builder(mContext, "default_channel")
                 .setContentTitle(mContext.getString(R.string.NOTIFICATION_REPORT_CREATED))
                 .setContentText(mContext.getString(R.string.NOTIFICATION_REPORT_INFO))
                 .setContentIntent(openReportIntent)
                 .setSmallIcon(R.drawable.ic_send)
+                .setDeleteIntent(deleteReportIntent)
                 .addAction(R.drawable.ic_send, mContext.getString(R.string.GENERAL_SEND), sendReportIntent)
+                .addAction(R.drawable.ic_send, mContext.getString(R.string.GENERAL_DELETE), deleteReportIntent)
                 .build();
 
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">library</string>
     <string name="GENERAL_SEND">Send</string>
+    <string name="GENERAL_DELETE">Delete</string>
     <string name="NOTIFICATION_REPORT_CREATED">New report created</string>
     <string name="NOTIFICATION_REPORT_INFO">Click to view the report</string>
 </resources>
