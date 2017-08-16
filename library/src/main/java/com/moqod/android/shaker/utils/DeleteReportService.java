@@ -21,7 +21,7 @@ public class DeleteReportService extends IntentService {
     private static final String TAG = "SendReportService";
 
     public static Intent getIntent(Context context, int reportId) {
-        Intent intent = new Intent(context, SendReportService.class);
+        Intent intent = new Intent(context, DeleteReportService.class);
         intent.putExtra(EXTRA_REPORT_ID, reportId);
         return intent;
     }

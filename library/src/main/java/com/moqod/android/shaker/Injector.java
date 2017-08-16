@@ -20,8 +20,9 @@ public class Injector {
 
     private static Injector INJECTOR;
     private Context mContext;
-    private ReportsRepository mReportsRepository;
-    private DbOpenHelper mDbOpenHelper;
+    private ReportsRepository mReportsRepository; // singleton
+    private DbOpenHelper mDbOpenHelper; // singleton
+    private NotificationHelper mNotificationHelper; // singleton
 
     private Injector(Context context) {
         mContext = context;
@@ -54,6 +55,13 @@ public class Injector {
     }
 
     public ReportsInteractor getReportsInteractor() {
-        return new ReportsInteractor(getReportsRepository(), new NotificationHelper(mContext), new ScreenShotHelper());
+        return new ReportsInteractor(getReportsRepository(), getNotificationHelper(), new ScreenShotHelper());
+    }
+
+    private NotificationHelper getNotificationHelper() {
+        if (mNotificationHelper == null) {
+            mNotificationHelper = new NotificationHelper(mContext);
+        }
+        return mNotificationHelper;
     }
 }
