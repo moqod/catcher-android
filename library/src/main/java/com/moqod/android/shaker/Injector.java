@@ -8,6 +8,7 @@ import com.moqod.android.shaker.domain.ReportsInteractor;
 import com.moqod.android.shaker.domain.ReportsRepository;
 import com.moqod.android.shaker.utils.NotificationHelper;
 import com.moqod.android.shaker.utils.ScreenShotHelper;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,10 +20,12 @@ import com.moqod.android.shaker.utils.ScreenShotHelper;
 public class Injector {
 
     private static Injector INJECTOR;
+
     private Context mContext;
     private ReportsRepository mReportsRepository; // singleton
     private DbOpenHelper mDbOpenHelper; // singleton
     private NotificationHelper mNotificationHelper; // singleton
+    private Schedulers mSchedulers; // singleton
 
     private Injector(Context context) {
         mContext = context;
@@ -63,5 +66,12 @@ public class Injector {
             mNotificationHelper = new NotificationHelper(mContext);
         }
         return mNotificationHelper;
+    }
+
+    public Schedulers getSchedulers() {
+        if (mSchedulers == null) {
+            mSchedulers = new Schedulers(io.reactivex.schedulers.Schedulers.io(), AndroidSchedulers.mainThread());
+        }
+        return mSchedulers;
     }
 }

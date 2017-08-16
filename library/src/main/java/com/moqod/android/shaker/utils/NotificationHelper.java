@@ -51,4 +51,13 @@ public class NotificationHelper {
             Log.d("NotificationHelper", "NotificationManager is null");
         }
     }
+
+    public void cancelNotification(int reportId) {
+        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.cancel(reportId);
+        } else {
+            Log.d("NotificationHelper", "NotificationManager is null");
+        }
+    }
 }

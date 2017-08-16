@@ -64,4 +64,14 @@ public class ReportModel {
         result = 31 * result + (mImageUri != null ? mImageUri.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "ReportModel{" +
+                "mId=" + mId +
+                ", mDate=" + mDate +
+                ", mComment='" + mComment + '\'' +
+                ", mImageUri='" + mImageUri + '\'' +
+                '}';
+    }
 }

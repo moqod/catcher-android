@@ -1,10 +1,12 @@
 package com.moqod.android.shaker.domain;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteException;
 import com.moqod.android.shaker.TestReport;
 import com.moqod.android.shaker.data.StubReportsRepository;
 import com.moqod.android.shaker.utils.NotificationHelper;
 import com.moqod.android.shaker.utils.ScreenShotHelper;
+import io.reactivex.observers.TestObserver;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,9 +52,67 @@ public class ReportsInteractorTest {
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
                 mMockScreenShotHelper);
 
-        mReportsInteractor.deleteReport(TestReport.UNKNOWN_ID);
+        TestObserver<Void> testObserver = mReportsInteractor.deleteReport(TestReport.UNKNOWN_ID).test();
+        testObserver.assertComplete();
 
         verify(reportsRepository).delete(TestReport.UNKNOWN_ID);
+        verify(mMockNotificationHelper).cancelNotification(TestReport.UNKNOWN_ID);
+    }
+
+    @Test
+    public void testDeleteReportThrowException() throws Exception {
+        ReportsRepository reportsRepository = mock(ReportsRepository.class);
+        when(reportsRepository.delete(TestReport.UNKNOWN_ID)).thenThrow(new SQLiteException());
+
+        mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
+                mMockScreenShotHelper);
+
+        TestObserver<Void> testObserver = mReportsInteractor.deleteReport(TestReport.UNKNOWN_ID).test();
+        testObserver.assertError(SQLiteException.class);
+    }
+
+    @Test
+    public void testGetReport() throws Exception {
+        ReportsRepository reportsRepository = mock(ReportsRepository.class);
+        ReportModel testReport = TestReport.getExist();
+        when(reportsRepository.get(TestReport.UNKNOWN_ID)).thenReturn(testReport);
+
+        mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
+                mMockScreenShotHelper);
+
+        TestObserver<ReportModel> test = mReportsInteractor.getReport(TestReport.UNKNOWN_ID).test();
+        test.assertResult(testReport);
+    }
+
+    @Test
+    public void testGetReportNotFound() throws Exception {
+        ReportsRepository reportsRepository = mock(ReportsRepository.class);
+        when(reportsRepository.get(TestReport.UNKNOWN_ID)).thenReturn(null);
+
+        mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
+                mMockScreenShotHelper);
+
+        TestObserver<ReportModel> test = mReportsInteractor.getReport(TestReport.UNKNOWN_ID).test();
+        test.assertError(ReportNotFoundException.class);
+    }
+
+    @Test
+    public void testGetReportThrowException() throws Exception {
+        ReportsRepository reportsRepository = mock(ReportsRepository.class);
+        Exception exception = new SQLiteException();
+        when(reportsRepository.get(TestReport.UNKNOWN_ID)).thenThrow(exception);
+
+        mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
+                mMockScreenShotHelper);
+
+        TestObserver<ReportModel> test = mReportsInteractor.getReport(TestReport.UNKNOWN_ID).test();
+        test.assertError(exception);
+    }
+
+    @Test
+    public void testSendReport() throws Exception {
+        mReportsInteractor.sendReport(TestReport.UNKNOWN_ID).test()
+                .assertError(RuntimeException.class);
     }
 
     private ScreenShotHelper createMockScreenShotHelper() {
