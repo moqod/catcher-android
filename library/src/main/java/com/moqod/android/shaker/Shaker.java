@@ -9,6 +9,8 @@ import com.moqod.android.shaker.domain.ReportsInteractor;
 import com.moqod.android.shaker.presentation.ReportActivity;
 import com.squareup.seismic.ShakeDetector;
 
+import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sergey Chuvashev
@@ -48,7 +50,11 @@ public class Shaker implements ShakeDetector.Listener, ActivityMonitor.OnAppFore
         Activity currentActivity = mActivityMonitor.getCurrentActivity();
         Log.d(TAG, "hearShake, current activity is " + currentActivity);
         if (currentActivity != null && !(currentActivity instanceof ReportActivity)) {
-            mReportsInteractor.createReport(currentActivity);
+            try {
+                mReportsInteractor.createReport(currentActivity);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

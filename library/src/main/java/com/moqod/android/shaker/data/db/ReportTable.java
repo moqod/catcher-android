@@ -15,9 +15,10 @@ public final class ReportTable {
     public static final String COLUMN_DATE = "date";
     public static final String COLUMN_COMMENT = "comment";
     public static final String COLUMN_IMAGE = "image";
+    public static final String COLUMN_LOGS = "logs";
 
     public static final String[] COLUMNS = new String[] {
-            COLUMN_ID, COLUMN_DATE, COLUMN_COMMENT, COLUMN_IMAGE
+            COLUMN_ID, COLUMN_DATE, COLUMN_COMMENT, COLUMN_IMAGE, COLUMN_LOGS
     };
 
     public static String queryById(int id) {
@@ -29,7 +30,8 @@ public final class ReportTable {
                 + COLUMN_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
                 + COLUMN_DATE + " REAL, "
                 + COLUMN_COMMENT + " TEXT, "
-                + COLUMN_IMAGE + " TEXT"
+                + COLUMN_IMAGE + " TEXT, "
+                + COLUMN_LOGS + " TEXT"
                 + ");"
                 ;
     }
