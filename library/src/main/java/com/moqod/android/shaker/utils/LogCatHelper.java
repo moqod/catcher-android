@@ -41,4 +41,11 @@ public class LogCatHelper {
 
         return null;
     }
+
+    public void deleteLogsFile(String logsPath) {
+        File file = new File(logsPath);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
 }

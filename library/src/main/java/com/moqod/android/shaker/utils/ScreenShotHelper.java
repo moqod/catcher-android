@@ -1,7 +1,9 @@
 package com.moqod.android.shaker.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
 
@@ -14,6 +16,12 @@ import android.view.View;
 
 public class ScreenShotHelper {
 
+    private Context mContext;
+
+    public ScreenShotHelper(Context context) {
+        mContext = context;
+    }
+
     public String takeScreenShot(Activity activity) {
         View rootView = activity.getWindow().getDecorView().getRootView();
         rootView.setDrawingCacheEnabled(true);
@@ -21,6 +29,10 @@ public class ScreenShotHelper {
         rootView.setDrawingCacheEnabled(false);
 
         return MediaStore.Images.Media.insertImage(activity.getContentResolver(), bitmap, "", "");
+    }
+
+    public void deleteScreenShot(String uri) {
+        mContext.getContentResolver().delete(Uri.parse(uri), null, null);
     }
 
 }

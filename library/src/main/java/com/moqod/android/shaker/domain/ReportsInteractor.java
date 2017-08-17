@@ -69,9 +69,12 @@ public class ReportsInteractor {
             @Override
             public void subscribe(CompletableEmitter completableEmitter) throws Exception {
                 try {
-                    mReportsRepository.delete(reportId);
+                    ReportModel reportModel = mReportsRepository.delete(reportId);
+                    if (reportModel != null) {
+                        mLogCatHelper.deleteLogsFile(reportModel.getLogsPath());
+                        mScreenShotHelper.deleteScreenShot(reportModel.getImageUri());
+                    }
                     mNotificationHelper.cancelNotification(reportId);
-                    // TODO: 17/08/2017 delete files
                     completableEmitter.onComplete();
                 } catch (Exception e) {
                     completableEmitter.onError(e);

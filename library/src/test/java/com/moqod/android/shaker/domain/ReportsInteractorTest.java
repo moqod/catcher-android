@@ -66,15 +66,19 @@ public class ReportsInteractorTest {
     @Test
     public void testDeleteReport() throws Exception {
         ReportsRepository reportsRepository = mock(ReportsRepository.class);
+        ReportModel testReport = TestReport.getExist();
+        when(reportsRepository.delete(testReport.getId())).thenReturn(testReport);
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), createMockLogCatHelper());
+                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
 
-        TestObserver<Void> testObserver = mReportsInteractor.deleteReport(TestReport.UNKNOWN_ID).test();
+        TestObserver<Void> testObserver = mReportsInteractor.deleteReport(testReport.getId()).test();
         testObserver.assertComplete();
 
-        verify(reportsRepository).delete(TestReport.UNKNOWN_ID);
-        verify(mMockNotificationHelper).cancelNotification(TestReport.UNKNOWN_ID);
+        verify(reportsRepository).delete(testReport.getId());
+        verify(mMockNotificationHelper).cancelNotification(testReport.getId());
+        verify(mMockScreenShotHelper).deleteScreenShot(testReport.getImageUri());
+        verify(mMockLogCatHelper).deleteLogsFile(testReport.getLogsPath());
     }
 
     @Test
@@ -83,7 +87,7 @@ public class ReportsInteractorTest {
         when(reportsRepository.delete(TestReport.UNKNOWN_ID)).thenThrow(new SQLiteException());
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), createMockLogCatHelper());
+                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
 
         TestObserver<Void> testObserver = mReportsInteractor.deleteReport(TestReport.UNKNOWN_ID).test();
         testObserver.assertError(SQLiteException.class);
@@ -96,7 +100,7 @@ public class ReportsInteractorTest {
         when(reportsRepository.get(TestReport.UNKNOWN_ID)).thenReturn(testReport);
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), createMockLogCatHelper());
+                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
 
         TestObserver<ReportModel> test = mReportsInteractor.getReport(TestReport.UNKNOWN_ID).test();
         test.assertResult(testReport);
@@ -108,7 +112,7 @@ public class ReportsInteractorTest {
         when(reportsRepository.get(TestReport.UNKNOWN_ID)).thenReturn(null);
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), createMockLogCatHelper());
+                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
 
         TestObserver<ReportModel> test = mReportsInteractor.getReport(TestReport.UNKNOWN_ID).test();
         test.assertError(ReportNotFoundException.class);
@@ -121,7 +125,7 @@ public class ReportsInteractorTest {
         when(reportsRepository.get(TestReport.UNKNOWN_ID)).thenThrow(exception);
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), createMockLogCatHelper());
+                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
 
         TestObserver<ReportModel> test = mReportsInteractor.getReport(TestReport.UNKNOWN_ID).test();
         test.assertError(exception);

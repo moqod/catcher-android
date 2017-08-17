@@ -60,7 +60,7 @@ public class Injector {
     }
 
     public ReportsInteractor getReportsInteractor() {
-        return new ReportsInteractor(getReportsRepository(), getNotificationHelper(), new ScreenShotHelper(),
+        return new ReportsInteractor(getReportsRepository(), getNotificationHelper(), new ScreenShotHelper(mContext),
                 new DeviceInfoProvider(), new LogCatHelper(mContext));
     }
 
