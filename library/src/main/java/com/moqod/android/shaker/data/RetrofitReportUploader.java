@@ -11,6 +11,7 @@ import com.moqod.android.shaker.domain.ReportModel;
 import com.moqod.android.shaker.domain.ReportUploader;
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -38,35 +39,56 @@ public class RetrofitReportUploader implements ReportUploader {
     }
 
     @Override
-    public Single<ReportModel> uploadReport(final ReportModel report, DeviceInfoModel deviceInfo) {
-        final ReportDto dto = mReportMapper.map(report, deviceInfo);
-        UriRequestBody screenShotRequestBody =
-                new UriRequestBody(mContext, MediaType.parse("image/jpg"), Uri.parse(report.getImageUri()));
-        return mRestApi.uploadScreenShot(MultipartBody.Part.createFormData("url", "image.jpg", screenShotRequestBody))
-                .flatMap(new Function<FileDto, SingleSource<? extends ReportModel>>() {
-                    @Override
-                    public SingleSource<? extends ReportModel> apply(FileDto fileDto) throws Exception {
-                        dto.setScreenshot(fileDto.getId());
+    public Single<ReportModel> uploadReport(final ReportModel report, final DeviceInfoModel deviceInfo) {
+        return Single.zip(uploadScreenShot(report), uploadLog(report), mapReport(report, deviceInfo))
+                .flatMap(createReport())
+                .map(reverseMapReport(report));
+    }
 
-                        Uri logsUri = Uri.fromFile(new File(report.getLogsPath()));
-                        UriRequestBody logRequestBody =
-                                new UriRequestBody(mContext, MediaType.parse("text/plain"), logsUri);
-                        return mRestApi.uploadLog(MultipartBody.Part.createFormData("url", "log.txt", logRequestBody))
-                                .flatMap(new Function<FileDto, SingleSource<? extends ReportModel>>() {
-                                    @Override
-                                    public SingleSource<? extends ReportModel> apply(FileDto fileDto) throws Exception {
-                                        dto.setLogs(fileDto.getId());
+    private Function<ReportDto, SingleSource<? extends ReportDto>> createReport() {
+        return new Function<ReportDto, SingleSource<? extends ReportDto>>() {
+            @Override
+            public SingleSource<? extends ReportDto> apply(ReportDto dto) throws Exception {
+                return mRestApi.createReport(dto);
+            }
+        };
+    }
 
-                                        return mRestApi.createReport(dto)
-                                                .map(new Function<Object, ReportModel>() {
-                                                    @Override
-                                                    public ReportModel apply(Object o) throws Exception {
-                                                        return report;
-                                                    }
-                                                });
-                                    }
-                                });
-                    }
-                });
+    private BiFunction<FileDto, FileDto, ReportDto> mapReport(final ReportModel report, final DeviceInfoModel deviceInfo) {
+        return new BiFunction<FileDto, FileDto, ReportDto>() {
+            @Override
+            public ReportDto apply(FileDto screenShotFile, FileDto logsFile) throws Exception {
+                final ReportDto dto = mReportMapper.map(report, deviceInfo);
+                dto.setScreenshot(screenShotFile.getId());
+                dto.setLogs(logsFile.getId());
+
+                return dto;
+            }
+        };
+    }
+
+    private Function<ReportDto, ReportModel> reverseMapReport(final ReportModel report) {
+        return new Function<ReportDto, ReportModel>() {
+            @Override
+            public ReportModel apply(ReportDto reportDto) throws Exception {
+                return report;
+            }
+        };
+    }
+
+    private Single<FileDto> uploadScreenShot(ReportModel report) {
+        return mRestApi.uploadScreenShot(createPart(mContext, "image/jpg", "image.jpg",
+                Uri.parse(report.getImageUri())));
+    }
+
+    private Single<FileDto> uploadLog(ReportModel report) {
+        return mRestApi.uploadLog(createPart(mContext, "text/plain", "log.txt",
+                Uri.fromFile(new File(report.getLogsPath()))));
+    }
+
+    private MultipartBody.Part createPart(Context context, String mimeType, String fileName, Uri uri) {
+        UriRequestBody requestBody =
+                new UriRequestBody(context, MediaType.parse(mimeType), uri);
+        return MultipartBody.Part.createFormData("url", fileName, requestBody);
     }
 }

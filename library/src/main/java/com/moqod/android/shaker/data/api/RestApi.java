@@ -16,7 +16,7 @@ import retrofit2.http.Part;
 
 public interface RestApi {
 
-    @POST("report/") Single<Object> createReport(@Body ReportDto reportDto);
+    @POST("report/") Single<ReportDto> createReport(@Body ReportDto reportDto);
 
     @POST("screenshot/")
     @Multipart
