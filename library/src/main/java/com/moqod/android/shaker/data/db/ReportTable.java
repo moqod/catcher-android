@@ -25,6 +25,9 @@ public final class ReportTable {
         return ReportTable.COLUMN_ID + "=" + id;
     }
 
+    private ReportTable() {
+    }
+
     public static String getCreateStatement() {
         return "CREATE TABLE " + NAME + "("
                 + COLUMN_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "

@@ -52,7 +52,7 @@ public class Shaker implements ShakeDetector.Listener, ActivityMonitor.OnAppFore
             try {
                 mReportsInteractor.createReport(currentActivity);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(TAG, "can not create a report", e);
             }
         }
     }

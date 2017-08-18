@@ -12,11 +12,14 @@ import io.reactivex.functions.Consumer;
 
 public class RxUtils {
 
+    private RxUtils() {
+    }
+
     public static Action emtyAction() {
         return new Action() {
             @Override
             public void run() throws Exception {
-
+                // no-op
             }
         };
     }
@@ -25,7 +28,7 @@ public class RxUtils {
         return new Consumer<T>() {
             @Override
             public void accept(T t) throws Exception {
-
+                // no-op
             }
         };
     }
