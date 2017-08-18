@@ -51,7 +51,7 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
         if (reportId > -1) {
             Injector injector = Injector.getInstance();
             mReportsPresenter = new ReportPresenter(injector.getReportsInteractor(), injector.getSchedulers(),
-                    reportId, injector.getErrorMapper());
+                    reportId, injector.getErrorMapper(), injector.getDeviceInfoProvider());
             mReportsPresenter.attachView(this);
         } else {
             Log.e(TAG, "report id is not defined");

@@ -2,9 +2,11 @@ package com.moqod.android.shaker.presentation;
 
 import com.moqod.android.shaker.Schedulers;
 import com.moqod.android.shaker.TestReport;
+import com.moqod.android.shaker.domain.DeviceInfoModel;
 import com.moqod.android.shaker.domain.ReportModel;
 import com.moqod.android.shaker.domain.ReportNotFoundException;
 import com.moqod.android.shaker.domain.ReportsInteractor;
+import com.moqod.android.shaker.utils.DeviceInfoProvider;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 import org.junit.Before;
@@ -31,12 +33,15 @@ public class ReportPresenterTest {
     public static final String TEST_ERROR_MESSAGE = "test_error_message";
     private ReportPresenter mReportPresenter;
     private ReportsInteractor mMockInteractor;
+    private DeviceInfoProvider mMockDeviceInfoProvider;
 
     @Before
     public void setUp() throws Exception {
         mMockInteractor = mock(ReportsInteractor.class);
+        mMockDeviceInfoProvider = mock(DeviceInfoProvider.class);
         Schedulers schedulers = new Schedulers(io.reactivex.schedulers.Schedulers.trampoline(), io.reactivex.schedulers.Schedulers.trampoline());
-        mReportPresenter = new ReportPresenter(mMockInteractor, schedulers, TestReport.UNKNOWN_ID, createMockErrorMapper());
+        mReportPresenter = new ReportPresenter(mMockInteractor, schedulers, TestReport.UNKNOWN_ID,
+                createMockErrorMapper(), mMockDeviceInfoProvider);
     }
 
     private ErrorMapper createMockErrorMapper() {
@@ -62,15 +67,18 @@ public class ReportPresenterTest {
     @Test
     public void testAttachViewAndShowReport() throws Exception {
         ReportModel testReport = TestReport.getExist();
+        DeviceInfoModel testDeviceInfo = TestReport.getTestDeviceInfo();
         when(mMockInteractor.getReport(TestReport.UNKNOWN_ID))
                 .thenReturn(Single.just(testReport));
+        when(mMockDeviceInfoProvider.get()).thenReturn(testDeviceInfo);
+
         ReportView reportView = mock(ReportView.class);
 
         mReportPresenter.attachView(reportView);
 
         assertNotNull(mReportPresenter.mView);
         verify(mMockInteractor).getReport(TestReport.UNKNOWN_ID);
-        verify(reportView, only()).showReport(new ReportViewModel(testReport));
+        verify(reportView, only()).showReport(new ReportViewModel(testReport, testDeviceInfo));
         verifyNoMoreInteractions(reportView);
     }
 

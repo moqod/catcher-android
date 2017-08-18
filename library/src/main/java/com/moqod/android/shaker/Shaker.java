@@ -39,6 +39,7 @@ public class Shaker implements ShakeDetector.Listener, ActivityMonitor.OnAppFore
 
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mShakeDetector = new ShakeDetector(this);
+        mShakeDetector.setSensitivity(ShakeDetector.SENSITIVITY_LIGHT);
 
         Application application = (Application) context.getApplicationContext();
         application.registerActivityLifecycleCallbacks(mActivityMonitor);
