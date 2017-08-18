@@ -9,7 +9,7 @@ package com.moqod.android.shaker.presentation;
 
 public interface ReportView {
     void showReport(ReportViewModel model);
-    void showError(Throwable throwable);
+    void showError(String text);
     void onReportDeleted();
     void onReportSent();
 }

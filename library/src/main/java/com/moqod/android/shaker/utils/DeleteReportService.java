@@ -43,7 +43,7 @@ public class DeleteReportService extends IntentService {
         int reportId = intent.getIntExtra(EXTRA_REPORT_ID, -1);
 
         if (reportId > -1) {
-            mReportsInteractor.deleteReport(reportId).subscribe();
+            mReportsInteractor.deleteReport(reportId).subscribe(RxUtils.emtyAction(), RxUtils.<Throwable>emptyConsumer());
         } else {
             Log.d(TAG, "invalid report id = " + reportId);
         }

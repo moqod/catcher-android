@@ -16,6 +16,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.when;
 public class ReportsInteractorTest {
 
     private static final String TEST_IMAGE_URI = "test_image_uri";
+    public static final String TEST_COMMENT = "test_comment";
 
     private ReportsInteractor mReportsInteractor;
     private NotificationHelper mMockNotificationHelper;
@@ -137,14 +139,18 @@ public class ReportsInteractorTest {
 
         when(mMockDeviceInfoProvider.get()).thenReturn(testDeviceInfo);
 
-        when(mMockReportUploader.uploadReport(testReport, testDeviceInfo)).thenReturn(Single.just(TestReport.getExist()));
+        when(mMockReportUploader.uploadReport(any(ReportModel.class), any(DeviceInfoModel.class)))
+                .thenReturn(Single.just(TestReport.getExist()));
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
                 mMockScreenShotHelper, mMockDeviceInfoProvider, mMockLogCatHelper, mMockReportUploader);
 
-        TestObserver<Void> testObserver = mReportsInteractor.sendReport(testReport.getId()).test();
+        ReportModel updatedReport = new ReportModel(testReport.getId(), testReport.getDate(),
+                TEST_COMMENT, testReport.getImageUri(), testReport.getLogsPath());
+
+        TestObserver<Void> testObserver = mReportsInteractor.sendReport(testReport.getId(), TEST_COMMENT).test();
         testObserver.assertComplete();
-        verify(mMockReportUploader).uploadReport(testReport, testDeviceInfo);
+        verify(mMockReportUploader).uploadReport(updatedReport, testDeviceInfo);
         verify(reportsRepository).delete(testReport.getId());
         verify(mMockNotificationHelper).cancelNotification(testReport.getId());
         verify(mMockScreenShotHelper).deleteScreenShot(testReport.getImageUri());
@@ -165,12 +171,15 @@ public class ReportsInteractorTest {
         when(mMockReportUploader.uploadReport(testReport, testDeviceInfo))
                 .thenReturn(Single.<ReportModel>error(new IOException()));
 
+        ReportModel updatedReport = new ReportModel(testReport.getId(), testReport.getDate(),
+                TEST_COMMENT, testReport.getImageUri(), testReport.getLogsPath());
+
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
                 mMockScreenShotHelper, mMockDeviceInfoProvider, mMockLogCatHelper, mMockReportUploader);
 
-        TestObserver<Void> testObserver = mReportsInteractor.sendReport(testReport.getId()).test();
+        TestObserver<Void> testObserver = mReportsInteractor.sendReport(testReport.getId(), "test_comment").test();
         testObserver.assertNotComplete();
-        verify(mMockReportUploader).uploadReport(testReport, testDeviceInfo);
+        verify(mMockReportUploader).uploadReport(updatedReport, testDeviceInfo);
     }
 
     private ScreenShotHelper createMockScreenShotHelper() {

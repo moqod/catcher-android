@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
@@ -26,6 +27,8 @@ import static org.mockito.Mockito.when;
  */
 public class ReportPresenterTest {
 
+    public static final String TEST_COMMENT = "test_comment";
+    public static final String TEST_ERROR_MESSAGE = "test_error_message";
     private ReportPresenter mReportPresenter;
     private ReportsInteractor mMockInteractor;
 
@@ -33,7 +36,13 @@ public class ReportPresenterTest {
     public void setUp() throws Exception {
         mMockInteractor = mock(ReportsInteractor.class);
         Schedulers schedulers = new Schedulers(io.reactivex.schedulers.Schedulers.trampoline(), io.reactivex.schedulers.Schedulers.trampoline());
-        mReportPresenter = new ReportPresenter(mMockInteractor, schedulers, TestReport.UNKNOWN_ID);
+        mReportPresenter = new ReportPresenter(mMockInteractor, schedulers, TestReport.UNKNOWN_ID, createMockErrorMapper());
+    }
+
+    private ErrorMapper createMockErrorMapper() {
+        ErrorMapper errorMapper = mock(ErrorMapper.class);
+        when(errorMapper.mapError(any(Throwable.class))).thenReturn(TEST_ERROR_MESSAGE);
+        return errorMapper;
     }
 
     @Test
@@ -75,7 +84,7 @@ public class ReportPresenterTest {
         mReportPresenter.attachView(reportView);
 
         verify(mMockInteractor).getReport(TestReport.UNKNOWN_ID);
-        verify(reportView, only()).showError(testException);
+        verify(reportView, only()).showError(TEST_ERROR_MESSAGE);
         verifyNoMoreInteractions(reportView);
     }
 
@@ -110,7 +119,7 @@ public class ReportPresenterTest {
         mReportPresenter.deleteReport();
 
         verify(mMockInteractor).deleteReport(TestReport.UNKNOWN_ID);
-        verify(reportView).showError(testException);
+        verify(reportView).showError(TEST_ERROR_MESSAGE);
     }
 
     // Send
@@ -119,14 +128,14 @@ public class ReportPresenterTest {
         ReportModel testReport = TestReport.getExist();
         when(mMockInteractor.getReport(TestReport.UNKNOWN_ID))
                 .thenReturn(Single.just(testReport));
-        when(mMockInteractor.sendReport(TestReport.UNKNOWN_ID))
+        when(mMockInteractor.sendReport(TestReport.UNKNOWN_ID, TEST_COMMENT))
                 .thenReturn(Completable.complete());
 
         ReportView reportView = mock(ReportView.class);
         mReportPresenter.attachView(reportView);
-        mReportPresenter.sendReport();
+        mReportPresenter.sendReport(TEST_COMMENT);
 
-        verify(mMockInteractor).sendReport(TestReport.UNKNOWN_ID);
+        verify(mMockInteractor).sendReport(TestReport.UNKNOWN_ID, TEST_COMMENT);
         verify(reportView).onReportSent();
     }
 
@@ -136,14 +145,14 @@ public class ReportPresenterTest {
         when(mMockInteractor.getReport(TestReport.UNKNOWN_ID))
                 .thenReturn(Single.just(testReport));
         ReportNotFoundException testException = new ReportNotFoundException();
-        when(mMockInteractor.sendReport(TestReport.UNKNOWN_ID))
+        when(mMockInteractor.sendReport(TestReport.UNKNOWN_ID, TEST_COMMENT))
                 .thenReturn(Completable.error(testException));
 
         ReportView reportView = mock(ReportView.class);
         mReportPresenter.attachView(reportView);
-        mReportPresenter.sendReport();
+        mReportPresenter.sendReport(TEST_COMMENT);
 
-        verify(mMockInteractor).sendReport(TestReport.UNKNOWN_ID);
-        verify(reportView).showError(testException);
+        verify(mMockInteractor).sendReport(TestReport.UNKNOWN_ID, TEST_COMMENT);
+        verify(reportView).showError(TEST_ERROR_MESSAGE);
     }
 }

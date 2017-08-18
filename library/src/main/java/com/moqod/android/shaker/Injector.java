@@ -11,6 +11,7 @@ import com.moqod.android.shaker.data.api.RestApi;
 import com.moqod.android.shaker.data.db.DbOpenHelper;
 import com.moqod.android.shaker.domain.ReportsInteractor;
 import com.moqod.android.shaker.domain.ReportsRepository;
+import com.moqod.android.shaker.presentation.ErrorMapper;
 import com.moqod.android.shaker.utils.DeviceInfoProvider;
 import com.moqod.android.shaker.utils.LogCatHelper;
 import com.moqod.android.shaker.utils.NotificationHelper;
@@ -121,5 +122,9 @@ public class Injector {
                 .client(clientBuilder.build());
 
         return builder.build().create(RestApi.class);
+    }
+
+    public ErrorMapper getErrorMapper() {
+        return new ErrorMapper(mContext);
     }
 }

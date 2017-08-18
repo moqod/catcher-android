@@ -17,11 +17,11 @@ public class TestReport {
     public static final int UNKNOWN_ID = 100;
 
     public static ReportModel getNew() {
-        return ReportModel.create(new Date(), "test comment", "test image uri", "logs path");
+        return ReportModel.create(new Date(), "", "test image uri", "logs path");
     }
 
     public static ReportModel getExist() {
-        return new ReportModel(UNKNOWN_ID, new Date(), "new comment", "new image uri", "logs path");
+        return new ReportModel(UNKNOWN_ID, new Date(), "", "new image uri", "logs path");
     }
 
     public static DeviceInfoModel getTestDeviceInfo() {

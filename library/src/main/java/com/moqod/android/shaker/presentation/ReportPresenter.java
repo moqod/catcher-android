@@ -22,15 +22,18 @@ class ReportPresenter {
     private ReportsInteractor mReportsInteractor;
     private com.moqod.android.shaker.Schedulers mSchedulers;
     private int mReportId;
+    private ErrorMapper mErrorMapper;
     @VisibleForTesting
     ReportView mView;
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    ReportPresenter(ReportsInteractor reportsInteractor, com.moqod.android.shaker.Schedulers schedulers, int reportId) {
+    ReportPresenter(ReportsInteractor reportsInteractor, com.moqod.android.shaker.Schedulers schedulers,
+                    int reportId, ErrorMapper errorMapper) {
         mReportsInteractor = reportsInteractor;
         mSchedulers = schedulers;
         mReportId = reportId;
+        mErrorMapper = errorMapper;
     }
 
     void attachView(ReportView view) {
@@ -51,7 +54,7 @@ class ReportPresenter {
                         if (throwable == null) {
                             mView.showReport(reportViewModel);
                         } else {
-                            mView.showError(throwable);
+                            mView.showError(mErrorMapper.mapError(throwable));
                         }
                     }
                 });
@@ -63,8 +66,8 @@ class ReportPresenter {
         mView = null;
     }
 
-    void sendReport() {
-        Disposable disposable = mReportsInteractor.sendReport(mReportId)
+    void sendReport(String comment) {
+        Disposable disposable = mReportsInteractor.sendReport(mReportId, comment)
                 .subscribeOn(mSchedulers.io())
                 .observeOn(mSchedulers.mainThread())
                 .subscribe(new Action() {
@@ -93,7 +96,7 @@ class ReportPresenter {
         return new Consumer<Throwable>() {
             @Override
             public void accept(Throwable throwable) throws Exception {
-                mView.showError(throwable);
+                mView.showError(mErrorMapper.mapError(throwable));
             }
         };
     }

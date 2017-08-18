@@ -50,7 +50,8 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
 
         if (reportId > -1) {
             Injector injector = Injector.getInstance();
-            mReportsPresenter = new ReportPresenter(injector.getReportsInteractor(), injector.getSchedulers(), reportId);
+            mReportsPresenter = new ReportPresenter(injector.getReportsInteractor(), injector.getSchedulers(),
+                    reportId, injector.getErrorMapper());
             mReportsPresenter.attachView(this);
         } else {
             Log.e(TAG, "report id is not defined");
@@ -97,8 +98,8 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
     }
 
     @Override
-    public void showError(Throwable throwable) {
-        Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+    public void showError(String text) {
+        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
     private void initViews() {
@@ -108,7 +109,8 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
         findViewById(R.id.report_send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mReportsPresenter.sendReport();
+                String comment = mComment.getText().toString();
+                mReportsPresenter.sendReport(comment);
             }
         });
     }

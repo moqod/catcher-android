@@ -75,7 +75,8 @@
             android:id="@+id/report_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/REPORT_COMMENT_HINT" />
+            android:hint="@string/REPORT_COMMENT_HINT"
+            android:maxLength="128" />
 
     </android.support.design.widget.TextInputLayout>
 

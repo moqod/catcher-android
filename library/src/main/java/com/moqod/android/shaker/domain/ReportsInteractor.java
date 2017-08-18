@@ -1,6 +1,7 @@
 package com.moqod.android.shaker.domain;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import com.moqod.android.shaker.utils.ActivityInfoProvider;
 import com.moqod.android.shaker.utils.LogCatHelper;
@@ -59,12 +60,16 @@ public class ReportsInteractor {
         }
     }
 
-    public Completable sendReport(final int reportId) {
+    public Completable sendReport(final int reportId, @Nullable final String comment) {
         return getReport(reportId)
                 .flatMapCompletable(new Function<ReportModel, CompletableSource>() {
                     @Override
                     public CompletableSource apply(ReportModel model) throws Exception {
-                        return mReportUploader.uploadReport(model, mDeviceInfoProvider.get())
+                        ReportModel updatedReport = model;
+                        if (comment != null) {
+                            updatedReport = new ReportModel(model.getId(), model.getDate(), comment, model.getImageUri(), model.getLogsPath());
+                        }
+                        return mReportUploader.uploadReport(updatedReport, mDeviceInfoProvider.get())
                                 .flatMapCompletable(new Function<ReportModel, CompletableSource>() {
                                     @Override
                                     public CompletableSource apply(ReportModel model) throws Exception {
