@@ -17,13 +17,14 @@ import java.util.Date;
 public class ReportMapper {
 
     ContentValues map(ReportModel model) {
-        ContentValues contentValues = new ContentValues(4);
+        ContentValues contentValues = new ContentValues(5);
         if (model.getId() > -1) {
             contentValues.put(ReportTable.COLUMN_ID, model.getId());
         }
         contentValues.put(ReportTable.COLUMN_DATE, model.getDate().getTime());
         contentValues.put(ReportTable.COLUMN_COMMENT, model.getComment());
         contentValues.put(ReportTable.COLUMN_IMAGE, model.getImageUri());
+        contentValues.put(ReportTable.COLUMN_LOGS, model.getLogsPath());
         return contentValues;
     }
 
@@ -32,7 +33,8 @@ public class ReportMapper {
         long date = cursor.getLong(cursor.getColumnIndexOrThrow(ReportTable.COLUMN_DATE));
         String comment = cursor.getString(cursor.getColumnIndexOrThrow(ReportTable.COLUMN_COMMENT));
         String image = cursor.getString(cursor.getColumnIndexOrThrow(ReportTable.COLUMN_IMAGE));
-        return new ReportModel(id, new Date(date), comment, image);
+        String logs = cursor.getString(cursor.getColumnIndexOrThrow(ReportTable.COLUMN_LOGS));
+        return new ReportModel(id, new Date(date), comment, image, logs);
     }
 
 }

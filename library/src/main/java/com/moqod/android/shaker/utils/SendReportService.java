@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import com.moqod.android.shaker.Injector;
 import com.moqod.android.shaker.domain.ReportsInteractor;
+import io.reactivex.functions.Consumer;
 
 /**
  * Created with IntelliJ IDEA.
@@ -43,7 +44,13 @@ public class SendReportService extends IntentService {
         int reportId = intent.getIntExtra(EXTRA_REPORT_ID, -1);
 
         if (reportId > -1) {
-            mReportsInteractor.sendReport(reportId);
+            mReportsInteractor.sendReport(reportId, null).subscribe(RxUtils.emtyAction(), new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) throws Exception {
+                    // TODO: 18/08/2017 handle error
+                    throwable.printStackTrace();
+                }
+            });
         } else {
             Log.d(TAG, "invalid report id = " + reportId);
         }

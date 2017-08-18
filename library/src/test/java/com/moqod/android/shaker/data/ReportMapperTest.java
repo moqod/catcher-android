@@ -39,10 +39,11 @@ public class ReportMapperTest {
         ReportModel newReport = TestReport.getNew();
         ContentValues contentValues = mReportMapper.map(newReport);
 
-        assertTrue(contentValues.size() == 3);
+        assertTrue(contentValues.size() == 4);
         assertEquals(newReport.getDate().getTime(), (long) contentValues.getAsLong(ReportTable.COLUMN_DATE));
         assertEquals(newReport.getComment(), contentValues.getAsString(ReportTable.COLUMN_COMMENT));
         assertEquals(newReport.getImageUri(), contentValues.getAsString(ReportTable.COLUMN_IMAGE));
+        assertEquals(newReport.getLogsPath(), contentValues.getAsString(ReportTable.COLUMN_LOGS));
     }
 
     @Test
@@ -50,10 +51,11 @@ public class ReportMapperTest {
         ReportModel newReport = TestReport.getExist();
         ContentValues contentValues = mReportMapper.map(newReport);
 
-        assertTrue(contentValues.size() == 4);
+        assertTrue(contentValues.size() == 5);
         assertEquals(newReport.getId(), (int) contentValues.getAsInteger(ReportTable.COLUMN_ID));
         assertEquals(newReport.getDate().getTime(), (long) contentValues.getAsLong(ReportTable.COLUMN_DATE));
         assertEquals(newReport.getComment(), contentValues.getAsString(ReportTable.COLUMN_COMMENT));
         assertEquals(newReport.getImageUri(), contentValues.getAsString(ReportTable.COLUMN_IMAGE));
+        assertEquals(newReport.getLogsPath(), contentValues.getAsString(ReportTable.COLUMN_LOGS));
     }
 }

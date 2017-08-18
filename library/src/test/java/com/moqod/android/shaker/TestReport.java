@@ -1,5 +1,6 @@
 package com.moqod.android.shaker;
 
+import com.moqod.android.shaker.domain.DeviceInfoModel;
 import com.moqod.android.shaker.domain.ReportModel;
 
 import java.util.Date;
@@ -16,11 +17,15 @@ public class TestReport {
     public static final int UNKNOWN_ID = 100;
 
     public static ReportModel getNew() {
-        return ReportModel.create(new Date(), "test comment", "test image uri");
+        return ReportModel.create(new Date(), "", "test image uri", "logs path");
     }
 
     public static ReportModel getExist() {
-        return new ReportModel(UNKNOWN_ID, new Date(), "new comment", "new image uri");
+        return new ReportModel(UNKNOWN_ID, new Date(), "", "new image uri", "logs path");
+    }
+
+    public static DeviceInfoModel getTestDeviceInfo() {
+        return new DeviceInfoModel("test name", "test os", "test screen size", 0, "test additional info");
     }
 
 }

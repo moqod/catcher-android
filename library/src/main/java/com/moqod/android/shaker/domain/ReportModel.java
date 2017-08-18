@@ -15,16 +15,18 @@ public class ReportModel {
     private Date mDate;
     private String mComment;
     private String mImageUri;
+    private String mLogsPath;
 
-    public ReportModel(int id, Date date, String comment, String imageUri) {
+    public ReportModel(int id, Date date, String comment, String imageUri, String logsPath) {
         mId = id;
         mDate = date;
         mComment = comment;
         mImageUri = imageUri;
+        mLogsPath = logsPath;
     }
 
-    public static ReportModel create(Date date, String comment, String imageUri) {
-        return new ReportModel(-1, date, comment, imageUri);
+    public static ReportModel create(Date date, String comment, String imageUri, String logsPath) {
+        return new ReportModel(-1, date, comment, imageUri, logsPath);
     }
 
     public int getId() {
@@ -43,6 +45,10 @@ public class ReportModel {
         return mImageUri;
     }
 
+    public String getLogsPath() {
+        return mLogsPath;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,7 +59,8 @@ public class ReportModel {
         if (mId != that.mId) return false;
         if (mDate != null ? !mDate.equals(that.mDate) : that.mDate != null) return false;
         if (mComment != null ? !mComment.equals(that.mComment) : that.mComment != null) return false;
-        return mImageUri != null ? mImageUri.equals(that.mImageUri) : that.mImageUri == null;
+        if (mImageUri != null ? !mImageUri.equals(that.mImageUri) : that.mImageUri != null) return false;
+        return mLogsPath != null ? mLogsPath.equals(that.mLogsPath) : that.mLogsPath == null;
     }
 
     @Override
@@ -62,6 +69,18 @@ public class ReportModel {
         result = 31 * result + (mDate != null ? mDate.hashCode() : 0);
         result = 31 * result + (mComment != null ? mComment.hashCode() : 0);
         result = 31 * result + (mImageUri != null ? mImageUri.hashCode() : 0);
+        result = 31 * result + (mLogsPath != null ? mLogsPath.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ReportModel{" +
+                "mId=" + mId +
+                ", mDate=" + mDate +
+                ", mComment='" + mComment + '\'' +
+                ", mImageUri='" + mImageUri + '\'' +
+                ", mLogsPath='" + mLogsPath + '\'' +
+                '}';
     }
 }

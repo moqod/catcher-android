@@ -19,6 +19,7 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        buildConfigField "String", "BASE_URL", "\"https://catcher.stage.mqd.me/api/\""
     }
     buildTypes {
         release {
@@ -63,8 +64,18 @@ task createTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:appcompat-v7:26.0.0'
+    def tree = fileTree(dir: 'dependencies', include: '**/*.gradle')
+    tree.each {
+        File file -> apply from: file, to: dependencies
+    }
+
+    def supportVersion = '26.0.1'
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
     compile "com.squareup:seismic:1.0.2"
+    compile "io.reactivex.rxjava2:rxjava:2.1.3"
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
     testCompile 'junit:junit:4.12'
     testCompile "org.robolectric:robolectric:3.4.2"

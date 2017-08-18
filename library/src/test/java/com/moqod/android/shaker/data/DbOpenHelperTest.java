@@ -56,11 +56,12 @@ public class DbOpenHelperTest {
 
         String[] columns = cursor.getColumnNames();
 
-        assertEquals(columns.length, 4);
+        assertEquals(columns.length, 5);
 
         assertThat(columns, hasItemInArray(ReportTable.COLUMN_ID));
         assertThat(columns, hasItemInArray(ReportTable.COLUMN_DATE));
         assertThat(columns, hasItemInArray(ReportTable.COLUMN_COMMENT));
         assertThat(columns, hasItemInArray(ReportTable.COLUMN_IMAGE));
+        assertThat(columns, hasItemInArray(ReportTable.COLUMN_LOGS));
     }
 }

@@ -30,12 +30,12 @@ class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
-
+        // not used
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
-
+        // not used
     }
 
     @Override
@@ -54,17 +54,17 @@ class ActivityMonitor implements Application.ActivityLifecycleCallbacks {
 
     @Override
     public void onActivityStopped(Activity activity) {
-
+        // not used
     }
 
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
-
+        // not used
     }
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-
+        // not used
     }
 
     private void notifyAppForeground() {
