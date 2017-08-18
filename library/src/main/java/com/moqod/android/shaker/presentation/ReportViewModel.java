@@ -1,5 +1,6 @@
 package com.moqod.android.shaker.presentation;
 
+import com.moqod.android.shaker.domain.DeviceInfoModel;
 import com.moqod.android.shaker.domain.ReportModel;
 
 import java.text.SimpleDateFormat;
@@ -15,10 +16,12 @@ import java.util.Locale;
 public class ReportViewModel {
 
     private ReportModel mModel;
+    private DeviceInfoModel mDeviceInfoModel;
     private final SimpleDateFormat mDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.ENGLISH);
 
-    public ReportViewModel(ReportModel model) {
+    public ReportViewModel(ReportModel model, DeviceInfoModel deviceInfoModel) {
         mModel = model;
+        mDeviceInfoModel = deviceInfoModel;
     }
 
     public String getDate() {
@@ -26,7 +29,12 @@ public class ReportViewModel {
     }
 
     public String getDeviceInfo() {
-        return "";
+        return String.format(Locale.ENGLISH, "%s; %s;\n%s;\n%s",
+                mDeviceInfoModel.getName(),
+                mDeviceInfoModel.getOs(),
+                mDeviceInfoModel.getScreenSize(),
+                mDeviceInfoModel.getAdditionalInfo()
+        );
     }
 
     public String getComment() {

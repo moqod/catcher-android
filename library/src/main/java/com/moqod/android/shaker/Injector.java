@@ -75,7 +75,11 @@ public class Injector {
 
     public ReportsInteractor getReportsInteractor() {
         return new ReportsInteractor(getReportsRepository(), getNotificationHelper(), new ScreenShotHelper(mContext),
-                new DeviceInfoProvider(mContext), new LogCatHelper(mContext), getReportUploader());
+                getDeviceInfoProvider(), new LogCatHelper(mContext), getReportUploader());
+    }
+
+    public DeviceInfoProvider getDeviceInfoProvider() {
+        return new DeviceInfoProvider(mContext);
     }
 
     private NotificationHelper getNotificationHelper() {

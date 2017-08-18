@@ -3,6 +3,7 @@ package com.moqod.android.shaker.presentation;
 import android.support.annotation.VisibleForTesting;
 import com.moqod.android.shaker.domain.ReportModel;
 import com.moqod.android.shaker.domain.ReportsInteractor;
+import com.moqod.android.shaker.utils.DeviceInfoProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
@@ -23,17 +24,19 @@ class ReportPresenter {
     private com.moqod.android.shaker.Schedulers mSchedulers;
     private int mReportId;
     private ErrorMapper mErrorMapper;
+    private DeviceInfoProvider mDeviceInfoProvider;
     @VisibleForTesting
     ReportView mView;
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     ReportPresenter(ReportsInteractor reportsInteractor, com.moqod.android.shaker.Schedulers schedulers,
-                    int reportId, ErrorMapper errorMapper) {
+                    int reportId, ErrorMapper errorMapper, DeviceInfoProvider deviceInfoProvider) {
         mReportsInteractor = reportsInteractor;
         mSchedulers = schedulers;
         mReportId = reportId;
         mErrorMapper = errorMapper;
+        mDeviceInfoProvider = deviceInfoProvider;
     }
 
     void attachView(ReportView view) {
@@ -43,7 +46,7 @@ class ReportPresenter {
                 .map(new Function<ReportModel, ReportViewModel>() {
                     @Override
                     public ReportViewModel apply(ReportModel model) throws Exception {
-                        return new ReportViewModel(model);
+                        return new ReportViewModel(model, mDeviceInfoProvider.get());
                     }
                 })
                 .subscribeOn(mSchedulers.io())
