@@ -36,7 +36,7 @@ public class DbReportsRepository implements ReportsRepository {
 
         ReportModel result = null;
         Cursor cursor =
-                mDb.query(ReportTable.NAME, ReportTable.COLUMNS, ReportTable.queryById(id), null, null, null, null);
+                mDb.query(ReportTable.NAME, ReportTable.allColumns(), ReportTable.queryById(id), null, null, null, null);
         try {
             if (cursor.moveToFirst()) {
                 result = mReportMapper.reverseMap(cursor);

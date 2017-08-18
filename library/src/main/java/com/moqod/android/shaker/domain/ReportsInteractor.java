@@ -29,6 +29,8 @@ import java.util.Date;
 
 public class ReportsInteractor {
 
+    private static final String TAG = "ReportsInteractor";
+
     private ReportsRepository mReportsRepository;
     private NotificationHelper mNotificationHelper;
     private ScreenShotHelper mScreenShotHelper;
@@ -87,7 +89,9 @@ public class ReportsInteractor {
                 try {
                     ReportModel reportModel = mReportsRepository.delete(reportId);
                     if (reportModel != null) {
-                        mLogCatHelper.deleteLogsFile(reportModel.getLogsPath());
+                        if (!mLogCatHelper.deleteLogsFile(reportModel.getLogsPath())) {
+                            Log.e(TAG, "can not delete logs file for report " + reportId);
+                        }
                         mScreenShotHelper.deleteScreenShot(reportModel.getImageUri());
                     }
                     mNotificationHelper.cancelNotification(reportId);

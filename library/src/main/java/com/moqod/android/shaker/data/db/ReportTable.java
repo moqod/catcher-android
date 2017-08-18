@@ -17,7 +17,7 @@ public final class ReportTable {
     public static final String COLUMN_IMAGE = "image";
     public static final String COLUMN_LOGS = "logs";
 
-    public static final String[] COLUMNS = new String[] {
+    private static final String[] COLUMNS = new String[] {
             COLUMN_ID, COLUMN_DATE, COLUMN_COMMENT, COLUMN_IMAGE, COLUMN_LOGS
     };
 
@@ -26,6 +26,10 @@ public final class ReportTable {
     }
 
     private ReportTable() {
+    }
+
+    public static String[] allColumns() {
+        return COLUMNS;
     }
 
     public static String getCreateStatement() {
