@@ -1,8 +1,13 @@
 package com.moqod.android.shaker;
 
 import android.content.Context;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.moqod.android.shaker.data.DbReportsRepository;
 import com.moqod.android.shaker.data.ReportMapper;
+import com.moqod.android.shaker.data.RetrofitReportUploader;
+import com.moqod.android.shaker.data.api.RestApi;
 import com.moqod.android.shaker.data.db.DbOpenHelper;
 import com.moqod.android.shaker.domain.ReportsInteractor;
 import com.moqod.android.shaker.domain.ReportsRepository;
@@ -11,6 +16,13 @@ import com.moqod.android.shaker.utils.LogCatHelper;
 import com.moqod.android.shaker.utils.NotificationHelper;
 import com.moqod.android.shaker.utils.ScreenShotHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,6 +40,7 @@ public class Injector {
     private DbOpenHelper mDbOpenHelper; // singleton
     private NotificationHelper mNotificationHelper; // singleton
     private Schedulers mSchedulers; // singleton
+    private RetrofitReportUploader mRetrofitReportUploader;
 
     private Injector(Context context) {
         mContext = context;
@@ -61,7 +74,7 @@ public class Injector {
 
     public ReportsInteractor getReportsInteractor() {
         return new ReportsInteractor(getReportsRepository(), getNotificationHelper(), new ScreenShotHelper(mContext),
-                new DeviceInfoProvider(), new LogCatHelper(mContext));
+                new DeviceInfoProvider(mContext), new LogCatHelper(mContext), getReportUploader());
     }
 
     private NotificationHelper getNotificationHelper() {
@@ -76,5 +89,37 @@ public class Injector {
             mSchedulers = new Schedulers(io.reactivex.schedulers.Schedulers.io(), AndroidSchedulers.mainThread());
         }
         return mSchedulers;
+    }
+
+    private RetrofitReportUploader getReportUploader() {
+        if (mRetrofitReportUploader == null) {
+            mRetrofitReportUploader = new RetrofitReportUploader(mContext, getRestApi(), new com.moqod.android.shaker.data.api.ReportMapper());
+        }
+        return mRetrofitReportUploader;
+    }
+
+    private RestApi getRestApi() {
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+        clientBuilder.readTimeout(50, TimeUnit.SECONDS);
+        clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
+
+//        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            clientBuilder.addInterceptor(interceptor);
+//        }
+
+        Gson gson = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .create();
+
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl(BuildConfig.BASE_URL /*+ Const.Network.API_VERSION + "/"*/)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(clientBuilder.build());
+
+        return builder.build().create(RestApi.class);
     }
 }

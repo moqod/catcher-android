@@ -9,9 +9,11 @@ import com.moqod.android.shaker.utils.ScreenShotHelper;
 import io.reactivex.Completable;
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
+import io.reactivex.CompletableSource;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
+import io.reactivex.functions.Function;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,15 +33,17 @@ public class ReportsInteractor {
     private ScreenShotHelper mScreenShotHelper;
     private ActivityInfoProvider<DeviceInfoModel> mDeviceInfoProvider;
     private LogCatHelper mLogCatHelper;
+    private ReportUploader mReportUploader;
 
     public ReportsInteractor(ReportsRepository reportsRepository, NotificationHelper notificationHelper,
                              ScreenShotHelper screenShotHelper, ActivityInfoProvider<DeviceInfoModel> deviceInfoProvider,
-                             LogCatHelper logCatHelper) {
+                             LogCatHelper logCatHelper, ReportUploader reportUploader) {
         mReportsRepository = reportsRepository;
         mNotificationHelper = notificationHelper;
         mScreenShotHelper = screenShotHelper;
         mDeviceInfoProvider = deviceInfoProvider;
         mLogCatHelper = logCatHelper;
+        mReportUploader = reportUploader;
     }
 
     public void createReport(Activity activity) throws IOException {
@@ -55,13 +59,20 @@ public class ReportsInteractor {
         }
     }
 
-    public Completable sendReport(int reportId) {
-        return Completable.create(new CompletableOnSubscribe() {
-            @Override
-            public void subscribe(CompletableEmitter completableEmitter) throws Exception {
-                completableEmitter.onError(new RuntimeException("not implemented"));
-            }
-        });
+    public Completable sendReport(final int reportId) {
+        return getReport(reportId)
+                .flatMapCompletable(new Function<ReportModel, CompletableSource>() {
+                    @Override
+                    public CompletableSource apply(ReportModel model) throws Exception {
+                        return mReportUploader.uploadReport(model, mDeviceInfoProvider.get())
+                                .flatMapCompletable(new Function<ReportModel, CompletableSource>() {
+                                    @Override
+                                    public CompletableSource apply(ReportModel model) throws Exception {
+                                        return deleteReport(model.getId());
+                                    }
+                                });
+                    }
+                });
     }
 
     public Completable deleteReport(final int reportId) {

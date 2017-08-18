@@ -19,6 +19,7 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        buildConfigField "String", "BASE_URL", "\"https://catcher.stage.mqd.me/api/\""
     }
     buildTypes {
         release {
@@ -62,6 +63,11 @@ task createTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    def tree = fileTree(dir: 'dependencies', include: '**/*.gradle')
+    tree.each {
+        File file -> apply from: file, to: dependencies
+    }
 
     def supportVersion = '26.0.1'
     compile "com.android.support:appcompat-v7:$supportVersion"

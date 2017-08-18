@@ -1,7 +1,5 @@
 package com.moqod.android.shaker.utils;
 
-import android.app.Activity;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Sergey Chuvashev
@@ -11,6 +9,6 @@ import android.app.Activity;
 
 public interface ActivityInfoProvider<T> {
 
-    T get(Activity activity);
+    T get();
 
 }

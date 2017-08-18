@@ -8,6 +8,7 @@ import com.moqod.android.shaker.utils.ActivityInfoProvider;
 import com.moqod.android.shaker.utils.LogCatHelper;
 import com.moqod.android.shaker.utils.NotificationHelper;
 import com.moqod.android.shaker.utils.ScreenShotHelper;
+import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,24 +34,18 @@ public class ReportsInteractorTest {
     private NotificationHelper mMockNotificationHelper;
     private ScreenShotHelper mMockScreenShotHelper;
     private LogCatHelper mMockLogCatHelper;
+    private ReportUploader mMockReportUploader;
+    private ActivityInfoProvider<DeviceInfoModel> mMockDeviceInfoProvider;
 
     @Before
     public void setUp() throws Exception {
         mMockNotificationHelper = createMockNotificationHelper();
         mMockScreenShotHelper = createMockScreenShotHelper();
         mMockLogCatHelper = createMockLogCatHelper();
+        mMockReportUploader = createMockReportUploader();
+        mMockDeviceInfoProvider = createMockDeviceInfoProvider();
         mReportsInteractor = new ReportsInteractor(createMockReportsRepository(), mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
-    }
-
-    private LogCatHelper createMockLogCatHelper() {
-        LogCatHelper logCatHelper = mock(LogCatHelper.class);
-        try {
-            when(logCatHelper.captureLogsToFile()).thenReturn(new File("test_logs_file"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return logCatHelper;
+                mMockScreenShotHelper, mMockDeviceInfoProvider, mMockLogCatHelper, mMockReportUploader);
     }
 
     @Test
@@ -70,7 +65,7 @@ public class ReportsInteractorTest {
         when(reportsRepository.delete(testReport.getId())).thenReturn(testReport);
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
+                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper, mMockReportUploader);
 
         TestObserver<Void> testObserver = mReportsInteractor.deleteReport(testReport.getId()).test();
         testObserver.assertComplete();
@@ -87,7 +82,7 @@ public class ReportsInteractorTest {
         when(reportsRepository.delete(TestReport.UNKNOWN_ID)).thenThrow(new SQLiteException());
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
+                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper, mMockReportUploader);
 
         TestObserver<Void> testObserver = mReportsInteractor.deleteReport(TestReport.UNKNOWN_ID).test();
         testObserver.assertError(SQLiteException.class);
@@ -100,7 +95,7 @@ public class ReportsInteractorTest {
         when(reportsRepository.get(TestReport.UNKNOWN_ID)).thenReturn(testReport);
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
+                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper, mMockReportUploader);
 
         TestObserver<ReportModel> test = mReportsInteractor.getReport(TestReport.UNKNOWN_ID).test();
         test.assertResult(testReport);
@@ -112,7 +107,7 @@ public class ReportsInteractorTest {
         when(reportsRepository.get(TestReport.UNKNOWN_ID)).thenReturn(null);
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
+                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper, mMockReportUploader);
 
         TestObserver<ReportModel> test = mReportsInteractor.getReport(TestReport.UNKNOWN_ID).test();
         test.assertError(ReportNotFoundException.class);
@@ -125,7 +120,7 @@ public class ReportsInteractorTest {
         when(reportsRepository.get(TestReport.UNKNOWN_ID)).thenThrow(exception);
 
         mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
-                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper);
+                mMockScreenShotHelper, createMockDeviceInfoProvider(), mMockLogCatHelper, mMockReportUploader);
 
         TestObserver<ReportModel> test = mReportsInteractor.getReport(TestReport.UNKNOWN_ID).test();
         test.assertError(exception);
@@ -133,8 +128,49 @@ public class ReportsInteractorTest {
 
     @Test
     public void testSendReport() throws Exception {
-        mReportsInteractor.sendReport(TestReport.UNKNOWN_ID).test()
-                .assertError(RuntimeException.class);
+        ReportModel testReport = TestReport.getExist();
+        DeviceInfoModel testDeviceInfo = TestReport.getTestDeviceInfo();
+
+        ReportsRepository reportsRepository = mock(ReportsRepository.class);
+        when(reportsRepository.get(testReport.getId())).thenReturn(testReport);
+        when(reportsRepository.delete(testReport.getId())).thenReturn(testReport);
+
+        when(mMockDeviceInfoProvider.get()).thenReturn(testDeviceInfo);
+
+        when(mMockReportUploader.uploadReport(testReport, testDeviceInfo)).thenReturn(Single.just(TestReport.getExist()));
+
+        mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
+                mMockScreenShotHelper, mMockDeviceInfoProvider, mMockLogCatHelper, mMockReportUploader);
+
+        TestObserver<Void> testObserver = mReportsInteractor.sendReport(testReport.getId()).test();
+        testObserver.assertComplete();
+        verify(mMockReportUploader).uploadReport(testReport, testDeviceInfo);
+        verify(reportsRepository).delete(testReport.getId());
+        verify(mMockNotificationHelper).cancelNotification(testReport.getId());
+        verify(mMockScreenShotHelper).deleteScreenShot(testReport.getImageUri());
+        verify(mMockLogCatHelper).deleteLogsFile(testReport.getLogsPath());
+    }
+
+    @Test
+    public void testSendError() throws Exception {
+        ReportModel testReport = TestReport.getExist();
+        DeviceInfoModel testDeviceInfo = TestReport.getTestDeviceInfo();
+
+        ReportsRepository reportsRepository = mock(ReportsRepository.class);
+        when(reportsRepository.get(testReport.getId())).thenReturn(testReport);
+        when(reportsRepository.delete(testReport.getId())).thenReturn(testReport);
+
+        when(mMockDeviceInfoProvider.get()).thenReturn(testDeviceInfo);
+
+        when(mMockReportUploader.uploadReport(testReport, testDeviceInfo))
+                .thenReturn(Single.<ReportModel>error(new IOException()));
+
+        mReportsInteractor = new ReportsInteractor(reportsRepository, mMockNotificationHelper,
+                mMockScreenShotHelper, mMockDeviceInfoProvider, mMockLogCatHelper, mMockReportUploader);
+
+        TestObserver<Void> testObserver = mReportsInteractor.sendReport(testReport.getId()).test();
+        testObserver.assertNotComplete();
+        verify(mMockReportUploader).uploadReport(testReport, testDeviceInfo);
     }
 
     private ScreenShotHelper createMockScreenShotHelper() {
@@ -152,11 +188,21 @@ public class ReportsInteractorTest {
     }
 
     private ActivityInfoProvider<DeviceInfoModel> createMockDeviceInfoProvider() {
-        return new ActivityInfoProvider<DeviceInfoModel>() {
-            @Override
-            public DeviceInfoModel get(Activity activity) {
-                return TestReport.getTestDeviceInfo();
-            }
-        };
+        return mock(ActivityInfoProvider.class);
     }
+
+    private ReportUploader createMockReportUploader() {
+        return mock(ReportUploader.class);
+    }
+
+    private LogCatHelper createMockLogCatHelper() {
+        LogCatHelper logCatHelper = mock(LogCatHelper.class);
+        try {
+            when(logCatHelper.captureLogsToFile()).thenReturn(new File("test_logs_file"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return logCatHelper;
+    }
+
 }
