@@ -48,7 +48,7 @@ public class SendReportService extends IntentService {
                 @Override
                 public void accept(Throwable throwable) throws Exception {
                     // TODO: 18/08/2017 handle error
-                    throwable.printStackTrace();
+                    Log.e(TAG, "can not send the report", throwable);
                 }
             });
         } else {

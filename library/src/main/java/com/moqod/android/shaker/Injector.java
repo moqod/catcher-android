@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Injector {
 
-    private static Injector INJECTOR;
+    private static Injector sINJECTOR;
 
     private Context mContext;
     private ReportsRepository mReportsRepository; // singleton
@@ -48,11 +48,11 @@ public class Injector {
     }
 
     public static Injector getInstance() {
-        return INJECTOR;
+        return sINJECTOR;
     }
 
     public static void init(Context context) {
-        INJECTOR = new Injector(context);
+        sINJECTOR = new Injector(context);
     }
 
     public ReportsRepository getReportsRepository() {
@@ -104,11 +104,9 @@ public class Injector {
         clientBuilder.readTimeout(50, TimeUnit.SECONDS);
         clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
 
-//        if (BuildConfig.DEBUG) {
-            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            clientBuilder.addInterceptor(interceptor);
-//        }
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        clientBuilder.addInterceptor(interceptor);
 
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

@@ -24,18 +24,6 @@ public class ReportDto {
         this.deviceInfo = deviceInfo;
     }
 
-    public void setScreenshot(int screenshot) {
-        this.screenshot = screenshot;
-    }
-
-    public void setLogs(int logs) {
-        this.logs = logs;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -50,5 +38,25 @@ public class ReportDto {
 
     public String getUrl() {
         return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public int getScreenshot() {
+        return screenshot;
+    }
+
+    public void setScreenshot(int screenshot) {
+        this.screenshot = screenshot;
+    }
+
+    public int getLogs() {
+        return logs;
+    }
+
+    public void setLogs(int logs) {
+        this.logs = logs;
     }
 }

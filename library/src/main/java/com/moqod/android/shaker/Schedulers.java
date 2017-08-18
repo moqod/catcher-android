@@ -14,8 +14,8 @@ public class Schedulers {
     private Scheduler mIO;
     private Scheduler mMainThread;
 
-    public Schedulers(Scheduler IO, Scheduler mainThread) {
-        mIO = IO;
+    public Schedulers(Scheduler io, Scheduler mainThread) {
+        mIO = io;
         mMainThread = mainThread;
     }
 

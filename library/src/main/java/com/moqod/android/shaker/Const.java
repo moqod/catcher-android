@@ -7,10 +7,9 @@ package com.moqod.android.shaker;
  * Time: 17:01
  */
 
-class Const {
+interface Const {
 
-    public class Network {
-
+    interface Network {
         public static final String API_VERSION = "v1";
     }
 }

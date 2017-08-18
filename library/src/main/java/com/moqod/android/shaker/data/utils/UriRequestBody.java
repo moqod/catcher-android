@@ -35,11 +35,18 @@ public class UriRequestBody extends RequestBody {
     @Override
     public long contentLength() throws IOException {
         mContext.grantUriPermission(mContext.getPackageName(), mUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        InputStream inputStream = mContext.getContentResolver().openInputStream(mUri);
-        int len = 0;
-        if (inputStream != null) {
-            len = inputStream.available();
-            inputStream.close();
+        int len;
+        InputStream inputStream = null;
+        try {
+            inputStream = mContext.getContentResolver().openInputStream(mUri);
+            len = 0;
+            if (inputStream != null) {
+                len = inputStream.available();
+            }
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
         }
 
         return len;
