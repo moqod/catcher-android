@@ -19,7 +19,7 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "BASE_URL", "\"https://catcher.stage.mqd.me/v1/api/\""
+        buildConfigField "String", "BASE_URL", "\"https://catcher.stage.mqd.me/api/v1/\""
     }
     buildTypes {
         release {

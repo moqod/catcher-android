@@ -27,12 +27,12 @@ public class Shaker implements ShakeDetector.Listener, ActivityMonitor.OnAppFore
     private final SensorManager mSensorManager;
     private final ReportsInteractor mReportsInteractor;
 
-    public static Shaker init(Context context) {
-        return new Shaker(context);
+    public static Shaker init(Context context, String apiToken) {
+        return new Shaker(context, apiToken);
     }
 
-    private Shaker(Context context) {
-        Injector.init(context);
+    private Shaker(Context context, String token) {
+        Injector.init(context, token);
 
         mReportsInteractor = Injector.getInstance().getReportsInteractor();
         mActivityMonitor = new ActivityMonitor(this);

@@ -30,7 +30,7 @@ public class ReportMapperTest {
 
     @Before
     public void setUp() throws Exception {
-        Injector.init(RuntimeEnvironment.application);
+        Injector.init(RuntimeEnvironment.application, "test_auth_token");
         mReportMapper = Injector.getInstance().getReportMapper();
     }
 

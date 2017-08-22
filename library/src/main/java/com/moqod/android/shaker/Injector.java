@@ -12,6 +12,7 @@ import com.moqod.android.shaker.data.db.DbOpenHelper;
 import com.moqod.android.shaker.domain.ReportsInteractor;
 import com.moqod.android.shaker.domain.ReportsRepository;
 import com.moqod.android.shaker.presentation.ErrorMapper;
+import com.moqod.android.shaker.utils.AuthInterceptor;
 import com.moqod.android.shaker.utils.DeviceInfoProvider;
 import com.moqod.android.shaker.utils.LogCatHelper;
 import com.moqod.android.shaker.utils.NotificationHelper;
@@ -37,22 +38,24 @@ public class Injector {
     private static Injector sINJECTOR;
 
     private Context mContext;
+    private String mToken;
     private ReportsRepository mReportsRepository; // singleton
     private DbOpenHelper mDbOpenHelper; // singleton
     private NotificationHelper mNotificationHelper; // singleton
     private Schedulers mSchedulers; // singleton
     private RetrofitReportUploader mRetrofitReportUploader;
 
-    private Injector(Context context) {
+    private Injector(Context context, String token) {
         mContext = context;
+        mToken = token;
     }
 
     public static Injector getInstance() {
         return sINJECTOR;
     }
 
-    public static void init(Context context) {
-        sINJECTOR = new Injector(context);
+    public static void init(Context context, String token) {
+        sINJECTOR = new Injector(context, token);
     }
 
     public ReportsRepository getReportsRepository() {
@@ -111,6 +114,7 @@ public class Injector {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         clientBuilder.addInterceptor(interceptor);
+        clientBuilder.addInterceptor(new AuthInterceptor(mToken));
 
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

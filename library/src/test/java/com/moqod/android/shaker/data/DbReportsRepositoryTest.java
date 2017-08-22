@@ -37,7 +37,7 @@ public class DbReportsRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        Injector.init(RuntimeEnvironment.application);
+        Injector.init(RuntimeEnvironment.application, "test_token");
 
         Injector injector = Injector.getInstance();
         mDbOpenHelper = injector.getDbOpenHelper();
