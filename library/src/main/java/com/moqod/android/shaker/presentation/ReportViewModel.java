@@ -41,6 +41,10 @@ public class ReportViewModel {
         return mModel.getComment();
     }
 
+    public String getLogsPath() {
+        return mModel.getLogsPath();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

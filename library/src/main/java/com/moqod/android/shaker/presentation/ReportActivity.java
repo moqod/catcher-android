@@ -34,11 +34,13 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
         return intent;
     }
 
-    private ReportPresenter mReportsPresenter;
+    @Nullable private ReportPresenter mReportsPresenter;
 
     private TextView mDate;
     private TextView mDeviceInfo;
     private EditText mComment;
+
+    @Nullable private ReportViewModel mModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +70,9 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.report_delete) {
-            mReportsPresenter.deleteReport();
+            if (mReportsPresenter != null) {
+                mReportsPresenter.deleteReport();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -77,12 +81,15 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mReportsPresenter.detachView();
+        if (mReportsPresenter != null) {
+            mReportsPresenter.detachView();
+        }
     }
 
     @Override
     public void showReport(ReportViewModel model) {
-        mDate.setText(model.getDate());
+        mModel = model;
+        mDate.setText(mModel.getDate());
         mDeviceInfo.setText(model.getDeviceInfo());
         mComment.setText(model.getComment());
     }
@@ -109,8 +116,18 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
         findViewById(R.id.report_send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String comment = mComment.getText().toString();
-                mReportsPresenter.sendReport(comment);
+                if (mReportsPresenter != null) {
+                    String comment = mComment.getText().toString();
+                    mReportsPresenter.sendReport(comment);
+                }
+            }
+        });
+        findViewById(R.id.report_logs).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mModel != null) {
+                    startActivity(LogsActivity.getIntent(ReportActivity.this, mModel.getLogsPath()));
+                }
             }
         });
     }

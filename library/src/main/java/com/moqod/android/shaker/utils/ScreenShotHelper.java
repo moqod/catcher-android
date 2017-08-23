@@ -1,10 +1,14 @@
 package com.moqod.android.shaker.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -16,6 +20,8 @@ import android.view.View;
 
 public class ScreenShotHelper {
 
+    private static final String TAG = "Shaker";
+
     private Context mContext;
 
     public ScreenShotHelper(Context context) {
@@ -23,12 +29,17 @@ public class ScreenShotHelper {
     }
 
     public String takeScreenShot(Activity activity) {
-        View rootView = activity.getWindow().getDecorView().getRootView();
-        rootView.setDrawingCacheEnabled(true);
-        Bitmap bitmap = Bitmap.createBitmap(rootView.getDrawingCache());
-        rootView.setDrawingCacheEnabled(false);
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
-        return MediaStore.Images.Media.insertImage(activity.getContentResolver(), bitmap, "", "");
+            View rootView = activity.getWindow().getDecorView().getRootView();
+            rootView.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(rootView.getDrawingCache());
+            rootView.setDrawingCacheEnabled(false);
+
+            return MediaStore.Images.Media.insertImage(activity.getContentResolver(), bitmap, "", "");
+        }
+        Log.e(TAG, "permission WRITE_EXTERNAL_STORAGE is not granted");
+        return null;
     }
 
     public void deleteScreenShot(String uri) {

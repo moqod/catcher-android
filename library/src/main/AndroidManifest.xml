@@ -5,7 +5,14 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".presentation.ReportActivity" />
+        <activity
+            android:name=".presentation.ReportActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.moqod.android.shaker" />
+        <activity
+            android:name=".presentation.LogsActivity"
+            android:taskAffinity="com.moqod.android.shaker" />
 
         <service
             android:name=".utils.SendReportService"

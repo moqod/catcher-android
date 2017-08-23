@@ -53,13 +53,16 @@ public class ReportsInteractor {
         String imageUri = mScreenShotHelper.takeScreenShot(activity);
         File logsFile = mLogCatHelper.captureLogsToFile();
 
-        ReportModel report = mReportsRepository.put(ReportModel.create(new Date(), "", imageUri, logsFile.toString()));
+        if (imageUri != null && logsFile != null) {
+            ReportModel report = mReportsRepository.put(ReportModel.create(new Date(), "", imageUri, logsFile.toString()));
 
-        if (report != null) {
-            mNotificationHelper.issueNotification(report.getId());
-        } else {
-            Log.d("ReportsInteractor", "cannot save report");
+            if (report != null) {
+                mNotificationHelper.issueNotification(report.getId());
+                return;
+            }
         }
+        // TODO: 22/08/2017 issue error notification
+        Log.d(TAG, "cannot save report");
     }
 
     public Completable sendReport(final int reportId, @Nullable final String comment) {
