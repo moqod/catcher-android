@@ -1,8 +1,9 @@
-package com.moqod.android.shaker.presentation;
+package com.moqod.android.shaker.presentation.report;
 
 import android.support.annotation.VisibleForTesting;
 import com.moqod.android.shaker.domain.ReportModel;
 import com.moqod.android.shaker.domain.ReportsInteractor;
+import com.moqod.android.shaker.presentation.ErrorMapper;
 import com.moqod.android.shaker.utils.DeviceInfoProvider;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;

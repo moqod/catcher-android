@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import com.moqod.android.shaker.presentation.report.ReportActivity;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

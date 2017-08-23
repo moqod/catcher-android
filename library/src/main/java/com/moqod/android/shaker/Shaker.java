@@ -6,7 +6,7 @@ import android.content.Context;
 import android.hardware.SensorManager;
 import android.util.Log;
 import com.moqod.android.shaker.domain.ReportsInteractor;
-import com.moqod.android.shaker.presentation.ReportActivity;
+import com.moqod.android.shaker.presentation.report.ReportActivity;
 import com.squareup.seismic.ShakeDetector;
 
 import java.io.IOException;
@@ -27,19 +27,19 @@ public class Shaker implements ShakeDetector.Listener, ActivityMonitor.OnAppFore
     private final SensorManager mSensorManager;
     private final ReportsInteractor mReportsInteractor;
 
-    public static Shaker init(Context context) {
-        return new Shaker(context);
+    public static Shaker init(Context context, String apiToken) {
+        return new Shaker(context, apiToken);
     }
 
-    private Shaker(Context context) {
-        Injector.init(context);
+    private Shaker(Context context, String token) {
+        Injector.init(context, token);
 
         mReportsInteractor = Injector.getInstance().getReportsInteractor();
         mActivityMonitor = new ActivityMonitor(this);
 
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mShakeDetector = new ShakeDetector(this);
-        mShakeDetector.setSensitivity(ShakeDetector.SENSITIVITY_LIGHT);
+        mShakeDetector.setSensitivity(11);
 
         Application application = (Application) context.getApplicationContext();
         application.registerActivityLifecycleCallbacks(mActivityMonitor);

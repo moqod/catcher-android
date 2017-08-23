@@ -1,4 +1,4 @@
-package com.moqod.android.shaker.presentation;
+package com.moqod.android.shaker.presentation.report;
 
 import com.moqod.android.shaker.domain.DeviceInfoModel;
 import com.moqod.android.shaker.domain.ReportModel;
@@ -24,6 +24,14 @@ public class ReportViewModel {
         mDeviceInfoModel = deviceInfoModel;
     }
 
+    public int getId() {
+        return mModel.getId();
+    }
+
+    public String getImageUri() {
+        return mModel.getImageUri();
+    }
+
     public String getDate() {
         return mDateFormat.format(mModel.getDate());
     }
@@ -39,6 +47,10 @@ public class ReportViewModel {
 
     public String getComment() {
         return mModel.getComment();
+    }
+
+    public String getLogsPath() {
+        return mModel.getLogsPath();
     }
 
     @Override

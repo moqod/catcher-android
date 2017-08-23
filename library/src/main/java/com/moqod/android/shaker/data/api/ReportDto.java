@@ -15,7 +15,7 @@ public class ReportDto {
     private String comment;
     private DeviceInfoDto deviceInfo;
     private int screenshot;
-    private int logs;
+    private int log;
     private String url;
 
     public ReportDto(Date date, String comment, DeviceInfoDto deviceInfo) {
@@ -53,10 +53,10 @@ public class ReportDto {
     }
 
     public int getLogs() {
-        return logs;
+        return log;
     }
 
     public void setLogs(int logs) {
-        this.logs = logs;
+        this.log = logs;
     }
 }

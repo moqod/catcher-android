@@ -1,7 +1,8 @@
-package com.moqod.android.shaker.presentation;
+package com.moqod.android.shaker.presentation.report;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.moqod.android.shaker.Injector;
 import com.moqod.android.shaker.R;
+import com.moqod.android.shaker.presentation.log.LogsActivity;
+import com.moqod.android.shaker.presentation.screenshot.ScreenShotActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,11 +37,13 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
         return intent;
     }
 
-    private ReportPresenter mReportsPresenter;
+    @Nullable private ReportPresenter mReportsPresenter;
 
     private TextView mDate;
     private TextView mDeviceInfo;
     private EditText mComment;
+
+    @Nullable private ReportViewModel mModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +73,9 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.report_delete) {
-            mReportsPresenter.deleteReport();
+            if (mReportsPresenter != null) {
+                mReportsPresenter.deleteReport();
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -77,12 +84,16 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mReportsPresenter.detachView();
+        if (mReportsPresenter != null) {
+            mReportsPresenter.detachView();
+        }
     }
 
     @Override
     public void showReport(ReportViewModel model) {
-        mDate.setText(model.getDate());
+        mModel = model;
+        setTitle(getString(R.string.REPORT_TITLE, model.getId()));
+        mDate.setText(mModel.getDate());
         mDeviceInfo.setText(model.getDeviceInfo());
         mComment.setText(model.getComment());
     }
@@ -109,8 +120,26 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
         findViewById(R.id.report_send).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String comment = mComment.getText().toString();
-                mReportsPresenter.sendReport(comment);
+                if (mReportsPresenter != null) {
+                    String comment = mComment.getText().toString();
+                    mReportsPresenter.sendReport(comment);
+                }
+            }
+        });
+        findViewById(R.id.report_logs).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mModel != null) {
+                    startActivity(LogsActivity.getIntent(ReportActivity.this, mModel.getLogsPath()));
+                }
+            }
+        });
+        findViewById(R.id.report_screen_shot).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mModel != null) {
+                    ScreenShotActivity.run(ReportActivity.this, Uri.parse(mModel.getImageUri()));
+                }
             }
         });
     }
