@@ -8,4 +8,7 @@
     <string name="REPORT_DEVICE_INFO_HEADER">Device info</string>
     <string name="REPORT_ATTACHMENTS_HEADER">Attachments</string>
     <string name="ERROR_REPORT_NOT_FOUND">Report not found</string>
+    <string name="SCREENSHOT_TITLE">Screenshot</string>
+    <string name="LOGS_TITLE">Latest logs</string>
+    <string name="REPORT_TITLE">Report #%1$d</string>
 </resources>

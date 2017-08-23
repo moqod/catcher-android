@@ -24,6 +24,14 @@ public class ReportViewModel {
         mDeviceInfoModel = deviceInfoModel;
     }
 
+    public int getId() {
+        return mModel.getId();
+    }
+
+    public String getImageUri() {
+        return mModel.getImageUri();
+    }
+
     public String getDate() {
         return mDateFormat.format(mModel.getDate());
     }

@@ -12,6 +12,11 @@
             android:taskAffinity="com.moqod.android.shaker" />
         <activity
             android:name=".presentation.log.LogsActivity"
+            android:label="@string/LOGS_TITLE"
+            android:taskAffinity="com.moqod.android.shaker" />
+        <activity
+            android:name=".presentation.screenshot.ScreenShotActivity"
+            android:label="@string/SCREENSHOT_TITLE"
             android:taskAffinity="com.moqod.android.shaker" />
 
         <service

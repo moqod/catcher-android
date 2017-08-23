@@ -2,6 +2,7 @@ package com.moqod.android.shaker.presentation.report;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.moqod.android.shaker.Injector;
 import com.moqod.android.shaker.R;
 import com.moqod.android.shaker.presentation.log.LogsActivity;
+import com.moqod.android.shaker.presentation.screenshot.ScreenShotActivity;
 
 /**
  * Created with IntelliJ IDEA.
@@ -90,6 +92,7 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
     @Override
     public void showReport(ReportViewModel model) {
         mModel = model;
+        setTitle(getString(R.string.REPORT_TITLE, model.getId()));
         mDate.setText(mModel.getDate());
         mDeviceInfo.setText(model.getDeviceInfo());
         mComment.setText(model.getComment());
@@ -128,6 +131,14 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
             public void onClick(View view) {
                 if (mModel != null) {
                     startActivity(LogsActivity.getIntent(ReportActivity.this, mModel.getLogsPath()));
+                }
+            }
+        });
+        findViewById(R.id.report_screen_shot).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mModel != null) {
+                    ScreenShotActivity.run(ReportActivity.this, Uri.parse(mModel.getImageUri()));
                 }
             }
         });
