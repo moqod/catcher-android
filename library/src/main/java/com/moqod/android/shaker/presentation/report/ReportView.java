@@ -1,4 +1,4 @@
-package com.moqod.android.shaker.presentation;
+package com.moqod.android.shaker.presentation.report;
 
 /**
  * Created with IntelliJ IDEA.

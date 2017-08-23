@@ -6,7 +6,7 @@ import android.content.Context;
 import android.hardware.SensorManager;
 import android.util.Log;
 import com.moqod.android.shaker.domain.ReportsInteractor;
-import com.moqod.android.shaker.presentation.ReportActivity;
+import com.moqod.android.shaker.presentation.report.ReportActivity;
 import com.squareup.seismic.ShakeDetector;
 
 import java.io.IOException;

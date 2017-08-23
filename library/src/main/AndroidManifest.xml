@@ -6,12 +6,12 @@
 
     <application android:theme="@style/AppTheme">
         <activity
-            android:name=".presentation.ReportActivity"
+            android:name=".presentation.report.ReportActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:taskAffinity="com.moqod.android.shaker" />
         <activity
-            android:name=".presentation.LogsActivity"
+            android:name=".presentation.log.LogsActivity"
             android:taskAffinity="com.moqod.android.shaker" />
 
         <service

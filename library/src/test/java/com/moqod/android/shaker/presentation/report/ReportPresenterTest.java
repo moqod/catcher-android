@@ -1,4 +1,4 @@
-package com.moqod.android.shaker.presentation;
+package com.moqod.android.shaker.presentation.report;
 
 import com.moqod.android.shaker.Schedulers;
 import com.moqod.android.shaker.TestReport;
@@ -6,6 +6,10 @@ import com.moqod.android.shaker.domain.DeviceInfoModel;
 import com.moqod.android.shaker.domain.ReportModel;
 import com.moqod.android.shaker.domain.ReportNotFoundException;
 import com.moqod.android.shaker.domain.ReportsInteractor;
+import com.moqod.android.shaker.presentation.ErrorMapper;
+import com.moqod.android.shaker.presentation.report.ReportPresenter;
+import com.moqod.android.shaker.presentation.report.ReportView;
+import com.moqod.android.shaker.presentation.report.ReportViewModel;
 import com.moqod.android.shaker.utils.DeviceInfoProvider;
 import io.reactivex.Completable;
 import io.reactivex.Single;

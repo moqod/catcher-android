@@ -1,4 +1,4 @@
-package com.moqod.android.shaker.presentation;
+package com.moqod.android.shaker.presentation.report;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.moqod.android.shaker.Injector;
 import com.moqod.android.shaker.R;
+import com.moqod.android.shaker.presentation.log.LogsActivity;
 
 /**
  * Created with IntelliJ IDEA.

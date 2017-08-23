@@ -1,4 +1,4 @@
-package com.moqod.android.shaker.presentation;
+package com.moqod.android.shaker.presentation.log;
 
 import android.util.Log;
 import io.reactivex.Single;

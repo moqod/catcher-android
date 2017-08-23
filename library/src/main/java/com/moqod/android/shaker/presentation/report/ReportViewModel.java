@@ -1,4 +1,4 @@
-package com.moqod.android.shaker.presentation;
+package com.moqod.android.shaker.presentation.report;
 
 import com.moqod.android.shaker.domain.DeviceInfoModel;
 import com.moqod.android.shaker.domain.ReportModel;

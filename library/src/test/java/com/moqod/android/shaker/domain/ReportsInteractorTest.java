@@ -184,7 +184,7 @@ public class ReportsInteractorTest {
 
     private ScreenShotHelper createMockScreenShotHelper() {
         ScreenShotHelper screenShotHelper = mock(ScreenShotHelper.class);
-        when(screenShotHelper.takeScreenShot(null)).thenReturn(TEST_IMAGE_URI);
+        when(screenShotHelper.takeScreenShot(any(Activity.class))).thenReturn(TEST_IMAGE_URI);
         return screenShotHelper;
     }
 
