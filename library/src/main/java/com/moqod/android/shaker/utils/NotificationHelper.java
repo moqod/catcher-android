@@ -26,19 +26,21 @@ public class NotificationHelper {
 
     public void issueNotification(int reportId) {
         PendingIntent openReportIntent =
-                PendingIntent.getActivity(mContext, 0, ReportActivity.getIntent(mContext, reportId), PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getActivity(mContext, reportId + 100, ReportActivity.getIntent(mContext, reportId), PendingIntent.FLAG_UPDATE_CURRENT);
 
         PendingIntent sendReportIntent =
-                PendingIntent.getService(mContext, 1, SendReportService.getIntent(mContext, reportId), PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getService(mContext, reportId + 101, SendReportService.getIntent(mContext, reportId), PendingIntent.FLAG_UPDATE_CURRENT);
 
         PendingIntent deleteReportIntent =
-                PendingIntent.getService(mContext, 2, DeleteReportService.getIntent(mContext, reportId), PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.getService(mContext, reportId + 102, DeleteReportService.getIntent(mContext, reportId), PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification notification = new NotificationCompat.Builder(mContext, "default_channel")
                 .setContentTitle(mContext.getString(R.string.NOTIFICATION_REPORT_CREATED))
                 .setContentText(mContext.getString(R.string.NOTIFICATION_REPORT_INFO))
                 .setContentIntent(openReportIntent)
                 .setSmallIcon(R.drawable.ic_send)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_SOUND)
                 .setDeleteIntent(deleteReportIntent)
                 .addAction(R.drawable.ic_send, mContext.getString(R.string.GENERAL_SEND), sendReportIntent)
                 .addAction(R.drawable.ic_send, mContext.getString(R.string.GENERAL_DELETE), deleteReportIntent)
