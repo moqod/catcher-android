@@ -25,5 +25,4 @@
 #-renamesourcefileattribute SourceFile
 
 -dontwarn okio.**
--dontwarn javax.annotation.Nullable
--dontwarn javax.annotation.ParametersAreNonnullByDefault
+-dontwarn javax.annotation.**
