@@ -4,20 +4,23 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <application android:theme="@style/AppTheme">
+    <application>
         <activity
             android:name=".presentation.report.ReportActivity"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
-            android:taskAffinity="com.moqod.android.shaker" />
+            android:taskAffinity="com.moqod.android.shaker"
+            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".presentation.log.LogsActivity"
             android:label="@string/LOGS_TITLE"
-            android:taskAffinity="com.moqod.android.shaker" />
+            android:taskAffinity="com.moqod.android.shaker"
+            android:theme="@style/Theme.AppCompat.Light" />
         <activity
             android:name=".presentation.screenshot.ScreenShotActivity"
             android:label="@string/SCREENSHOT_TITLE"
-            android:taskAffinity="com.moqod.android.shaker" />
+            android:taskAffinity="com.moqod.android.shaker"
+            android:theme="@style/Theme.AppCompat.Light" />
 
         <service
             android:name=".utils.SendReportService"
