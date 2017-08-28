@@ -8,7 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import com.moqod.android.shaker.Logger;
 import com.moqod.android.shaker.utils.screenshot.ScreenshotTaker;
 
 /**
@@ -19,8 +19,6 @@ import com.moqod.android.shaker.utils.screenshot.ScreenshotTaker;
  */
 
 public class ScreenShotHelper {
-
-    private static final String TAG = "Shaker";
 
     private Context mContext;
 
@@ -33,7 +31,7 @@ public class ScreenShotHelper {
             Bitmap bitmap = ScreenshotTaker.getScreenshotBitmap(activity, null);
             return MediaStore.Images.Media.insertImage(activity.getContentResolver(), bitmap, "", "");
         }
-        Log.e(TAG, "permission WRITE_EXTERNAL_STORAGE is not granted");
+        Logger.e("permission WRITE_EXTERNAL_STORAGE is not granted");
         return null;
     }
 

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.moqod.android.shaker.Injector;
+import com.moqod.android.shaker.Logger;
 import com.moqod.android.shaker.R;
 import com.moqod.android.shaker.presentation.log.LogsActivity;
 import com.moqod.android.shaker.presentation.screenshot.ScreenShotActivity;
@@ -27,7 +27,6 @@ import com.moqod.android.shaker.presentation.screenshot.ScreenShotActivity;
 
 public class ReportActivity extends AppCompatActivity implements ReportView {
 
-    private static final String TAG = "ReportActivity";
     private static final String EXTRA_REPORT_ID = "report_id";
 
     public static Intent getIntent(Context context, int reportId) {
@@ -59,7 +58,7 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
                     reportId, injector.getErrorMapper(), injector.getDeviceInfoProvider());
             mReportsPresenter.attachView(this);
         } else {
-            Log.e(TAG, "report id is not defined");
+            Logger.e("report id is not defined");
             finish();
         }
     }

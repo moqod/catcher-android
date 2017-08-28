@@ -2,7 +2,7 @@ package com.moqod.android.shaker.domain;
 
 import android.app.Activity;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import com.moqod.android.shaker.Logger;
 import com.moqod.android.shaker.utils.ActivityInfoProvider;
 import com.moqod.android.shaker.utils.LogCatHelper;
 import com.moqod.android.shaker.utils.NotificationHelper;
@@ -29,8 +29,6 @@ import java.util.Date;
  */
 
 public class ReportsInteractor {
-
-    private static final String TAG = "ReportsInteractor";
 
     private ReportsRepository mReportsRepository;
     private NotificationHelper mNotificationHelper;
@@ -66,7 +64,7 @@ public class ReportsInteractor {
             }
         }
         // TODO: 22/08/2017 issue error notification
-        Log.d(TAG, "cannot save report");
+        Logger.d("cannot save report");
     }
 
     public Completable sendReport(final int reportId, @Nullable final String comment) {
@@ -98,7 +96,7 @@ public class ReportsInteractor {
                     ReportModel reportModel = mReportsRepository.delete(reportId);
                     if (reportModel != null) {
                         if (!mLogCatHelper.deleteLogsFile(reportModel.getLogsPath())) {
-                            Log.e(TAG, "can not delete logs file for report " + reportId);
+                            Logger.e("can not delete logs file for report " + reportId);
                         }
                         mScreenShotHelper.deleteScreenShot(reportModel.getImageUri());
                     }

@@ -1,6 +1,6 @@
 package com.moqod.android.shaker.presentation.log;
 
-import android.util.Log;
+import com.moqod.android.shaker.Logger;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
@@ -16,8 +16,6 @@ import java.io.RandomAccessFile;
  */
 
 public class LogsReader {
-
-    private static final String TAG = "LogsReader";
 
     public Single<String> readLogsFile(final String path, final int lines) {
         return Single.create(new SingleOnSubscribe<String>() {
@@ -57,7 +55,7 @@ public class LogsReader {
                         try {
                             fileHandler.close();
                         } catch (IOException e) {
-                            Log.e(TAG, "unable to read logs file", e);
+                            Logger.e("unable to read logs file", e);
                         }
                 }
             }

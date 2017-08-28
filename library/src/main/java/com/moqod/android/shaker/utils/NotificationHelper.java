@@ -5,7 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+import com.moqod.android.shaker.Logger;
 import com.moqod.android.shaker.R;
 import com.moqod.android.shaker.presentation.report.ReportActivity;
 
@@ -50,7 +50,7 @@ public class NotificationHelper {
         if (notificationManager != null) {
             notificationManager.notify(reportId, notification);
         } else {
-            Log.d("NotificationHelper", "NotificationManager is null");
+            Logger.d("NotificationManager is null");
         }
     }
 
@@ -59,7 +59,7 @@ public class NotificationHelper {
         if (notificationManager != null) {
             notificationManager.cancel(reportId);
         } else {
-            Log.d("NotificationHelper", "NotificationManager is null");
+            Logger.d("NotificationManager is null");
         }
     }
 }

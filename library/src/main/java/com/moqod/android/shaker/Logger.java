@@ -11,18 +11,34 @@ import android.util.Log;
 
 public class Logger {
 
-    public static final String TAG = "Shaker";
+    private static final String TAG = "Shaker";
+
+    private static boolean ENABLED = false;
+
+    public static void enable() {
+        ENABLED = true;
+    }
+
+    public static void disable() {
+        ENABLED = false;
+    }
 
     public static void d(String message) {
-        Log.d(TAG, message);
+        if (ENABLED) {
+            Log.d(TAG, message);
+        }
     }
 
     public static void e(String message) {
-        Log.d(TAG, message);
+        if (ENABLED) {
+            Log.d(TAG, message);
+        }
     }
 
     public static void e(String message, Throwable throwable) {
-        Log.d(TAG, message, throwable);
+        if (ENABLED) {
+            Log.d(TAG, message, throwable);
+        }
     }
 
 }

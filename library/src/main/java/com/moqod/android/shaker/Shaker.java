@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.hardware.SensorManager;
-import android.util.Log;
 import com.moqod.android.shaker.domain.ReportsInteractor;
 import com.moqod.android.shaker.presentation.report.ReportActivity;
 import com.squareup.seismic.ShakeDetector;
@@ -19,8 +18,6 @@ import java.io.IOException;
  */
 
 public class Shaker implements ShakeDetector.Listener, ActivityMonitor.OnAppForegroundListener {
-
-    private static final String TAG = "Shaker";
 
     private final ShakeDetector mShakeDetector;
     private final ActivityMonitor mActivityMonitor;
@@ -48,12 +45,12 @@ public class Shaker implements ShakeDetector.Listener, ActivityMonitor.OnAppFore
     @Override
     public void hearShake() {
         Activity currentActivity = mActivityMonitor.getCurrentActivity();
-        Log.d(TAG, "hearShake, current activity is " + currentActivity);
+        Logger.d("hearShake, current activity is " + currentActivity);
         if (currentActivity != null && !(currentActivity instanceof ReportActivity)) {
             try {
                 mReportsInteractor.createReport(currentActivity);
             } catch (IOException e) {
-                Log.e(TAG, "can not create a report", e);
+                Logger.e("can not create a report", e);
             }
         }
     }

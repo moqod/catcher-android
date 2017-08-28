@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import com.moqod.android.shaker.Logger;
 import com.moqod.android.shaker.data.db.DbOpenHelper;
 import com.moqod.android.shaker.data.db.ReportTable;
 import com.moqod.android.shaker.domain.ReportModel;
@@ -19,8 +19,6 @@ import com.moqod.android.shaker.domain.ReportsRepository;
 
 public class DbReportsRepository implements ReportsRepository {
 
-    private static final String TAG = "DbReportsRepository";
-
     private final ReportMapper mReportMapper;
     private final SQLiteDatabase mDb;
 
@@ -32,7 +30,7 @@ public class DbReportsRepository implements ReportsRepository {
     @Override
     @Nullable
     public ReportModel get(int id) {
-        Log.d(TAG, "get report: " + id);
+        Logger.d("get report: " + id);
 
         ReportModel result = null;
         Cursor cursor =
@@ -52,7 +50,7 @@ public class DbReportsRepository implements ReportsRepository {
     @Override
     @Nullable
     public ReportModel put(ReportModel report) {
-        Log.d(TAG, "put report");
+        Logger.d("put report");
 
         ContentValues contentValues = mReportMapper.map(report);
         int id = report.getId();
@@ -76,7 +74,7 @@ public class DbReportsRepository implements ReportsRepository {
     @Override
     @Nullable
     public ReportModel delete(int id) {
-        Log.d(TAG, "delete report: " + id);
+        Logger.d("delete report: " + id);
         ReportModel reportModel = get(id);
         mDb.delete(ReportTable.NAME, ReportTable.queryById(id), null);
         return reportModel;

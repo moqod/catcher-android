@@ -4,8 +4,8 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import com.moqod.android.shaker.Injector;
+import com.moqod.android.shaker.Logger;
 import com.moqod.android.shaker.domain.ReportsInteractor;
 import io.reactivex.functions.Consumer;
 
@@ -19,7 +19,6 @@ import io.reactivex.functions.Consumer;
 public class SendReportService extends IntentService {
 
     private static final String EXTRA_REPORT_ID = "report_id";
-    private static final String TAG = "SendReportService";
 
     public static Intent getIntent(Context context, int reportId) {
         Intent intent = new Intent(context, SendReportService.class);
@@ -37,7 +36,7 @@ public class SendReportService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) {
-            Log.d(TAG, "intent is null");
+            Logger.d("intent is null");
             return;
         }
 
@@ -48,11 +47,11 @@ public class SendReportService extends IntentService {
                 @Override
                 public void accept(Throwable throwable) throws Exception {
                     // TODO: 18/08/2017 handle error
-                    Log.e(TAG, "can not send the report", throwable);
+                    Logger.e("can not send the report", throwable);
                 }
             });
         } else {
-            Log.d(TAG, "invalid report id = " + reportId);
+            Logger.d("invalid report id = " + reportId);
         }
     }
 }

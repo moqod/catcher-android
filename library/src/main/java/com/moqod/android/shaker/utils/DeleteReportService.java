@@ -4,8 +4,8 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import com.moqod.android.shaker.Injector;
+import com.moqod.android.shaker.Logger;
 import com.moqod.android.shaker.domain.ReportsInteractor;
 
 /**
@@ -18,7 +18,6 @@ import com.moqod.android.shaker.domain.ReportsInteractor;
 public class DeleteReportService extends IntentService {
 
     private static final String EXTRA_REPORT_ID = "report_id";
-    private static final String TAG = "SendReportService";
 
     public static Intent getIntent(Context context, int reportId) {
         Intent intent = new Intent(context, DeleteReportService.class);
@@ -36,7 +35,7 @@ public class DeleteReportService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) {
-            Log.d(TAG, "intent is null");
+            Logger.d("intent is null");
             return;
         }
 
@@ -45,7 +44,7 @@ public class DeleteReportService extends IntentService {
         if (reportId > -1) {
             mReportsInteractor.deleteReport(reportId).subscribe(RxUtils.emtyAction(), RxUtils.<Throwable>emptyConsumer());
         } else {
-            Log.d(TAG, "invalid report id = " + reportId);
+            Logger.d("invalid report id = " + reportId);
         }
     }
 }
