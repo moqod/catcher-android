@@ -17,18 +17,18 @@ import java.io.IOException;
  * Time: 13:54
  */
 
-public class Shaker implements ShakeDetector.Listener, ActivityMonitor.OnAppForegroundListener {
+public class Catcher implements ShakeDetector.Listener, ActivityMonitor.OnAppForegroundListener {
 
     private final ShakeDetector mShakeDetector;
     private final ActivityMonitor mActivityMonitor;
     private final SensorManager mSensorManager;
     private final ReportsInteractor mReportsInteractor;
 
-    public static Shaker init(Context context, String apiToken) {
-        return new Shaker(context, apiToken);
+    public static Catcher init(Context context, String apiToken) {
+        return new Catcher(context, apiToken);
     }
 
-    private Shaker(Context context, String token) {
+    private Catcher(Context context, String token) {
         Injector.init(context, token);
 
         mReportsInteractor = Injector.getInstance().getReportsInteractor();
