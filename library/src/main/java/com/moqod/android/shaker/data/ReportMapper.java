@@ -17,11 +17,12 @@ import java.util.Date;
 public class ReportMapper {
 
     ContentValues map(ReportModel model) {
-        ContentValues contentValues = new ContentValues(5);
+        ContentValues contentValues = new ContentValues(6);
         if (model.getId() > -1) {
             contentValues.put(ReportTable.COLUMN_ID, model.getId());
         }
         contentValues.put(ReportTable.COLUMN_DATE, model.getDate().getTime());
+        contentValues.put(ReportTable.COLUMN_VERSION, model.getVersion());
         contentValues.put(ReportTable.COLUMN_COMMENT, model.getComment());
         contentValues.put(ReportTable.COLUMN_IMAGE, model.getImageUri());
         contentValues.put(ReportTable.COLUMN_LOGS, model.getLogsPath());
@@ -31,10 +32,11 @@ public class ReportMapper {
     ReportModel reverseMap(Cursor cursor) {
         int id = cursor.getInt(cursor.getColumnIndexOrThrow(ReportTable.COLUMN_ID));
         long date = cursor.getLong(cursor.getColumnIndexOrThrow(ReportTable.COLUMN_DATE));
+        String version = cursor.getString(cursor.getColumnIndexOrThrow(ReportTable.COLUMN_VERSION));
         String comment = cursor.getString(cursor.getColumnIndexOrThrow(ReportTable.COLUMN_COMMENT));
         String image = cursor.getString(cursor.getColumnIndexOrThrow(ReportTable.COLUMN_IMAGE));
         String logs = cursor.getString(cursor.getColumnIndexOrThrow(ReportTable.COLUMN_LOGS));
-        return new ReportModel(id, new Date(date), comment, image, logs);
+        return new ReportModel(id, new Date(date), version, comment, image, logs);
     }
 
 }

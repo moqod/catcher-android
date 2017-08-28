@@ -9,7 +9,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.View;
+import com.moqod.android.shaker.utils.screenshot.ScreenshotTaker;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,12 +30,7 @@ public class ScreenShotHelper {
 
     public String takeScreenShot(Activity activity) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-
-            View rootView = activity.getWindow().getDecorView().getRootView();
-            rootView.setDrawingCacheEnabled(true);
-            Bitmap bitmap = Bitmap.createBitmap(rootView.getDrawingCache());
-            rootView.setDrawingCacheEnabled(false);
-
+            Bitmap bitmap = ScreenshotTaker.getScreenshotBitmap(activity, null);
             return MediaStore.Images.Media.insertImage(activity.getContentResolver(), bitmap, "", "");
         }
         Log.e(TAG, "permission WRITE_EXTERNAL_STORAGE is not granted");

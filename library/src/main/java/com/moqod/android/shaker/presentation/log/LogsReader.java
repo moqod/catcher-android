@@ -50,7 +50,6 @@ public class LogsReader {
                     }
 
                     singleEmitter.onSuccess(sb.reverse().toString());
-                    return;
                 } catch (IOException e) {
                     singleEmitter.onError(e);
                 } finally {
@@ -61,7 +60,6 @@ public class LogsReader {
                             Log.e(TAG, "unable to read logs file", e);
                         }
                 }
-                singleEmitter.onError(new IOException("can not read logs file"));
             }
         });
     }

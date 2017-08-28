@@ -67,7 +67,7 @@ public class DbReportsRepositoryTest {
     public void testUpdateReport() throws Exception {
         ReportModel insertedReport = mReportsRepository.put(TestReport.getNew());
 
-        ReportModel updateReport = new ReportModel(insertedReport.getId(), new Date(), "new comment", "new image uri", "new image path");
+        ReportModel updateReport = new ReportModel(insertedReport.getId(), new Date(), "test_version", "new comment", "new image uri", "new image path");
         ReportModel updatedReport = mReportsRepository.put(updateReport);
 
         checkReport(updateReport, updatedReport, true);

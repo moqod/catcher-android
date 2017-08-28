@@ -13,7 +13,7 @@ import com.moqod.android.shaker.domain.ReportModel;
 public class ReportMapper {
 
     public ReportDto map(ReportModel model, DeviceInfoModel deviceInfoDto) {
-        return new ReportDto(model.getDate(), model.getComment(), map(deviceInfoDto));
+        return new ReportDto(model.getDate(), model.getVersion(), model.getComment(), map(deviceInfoDto));
     }
 
     private DeviceInfoDto map(DeviceInfoModel model) {

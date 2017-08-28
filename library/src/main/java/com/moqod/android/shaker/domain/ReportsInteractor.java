@@ -7,6 +7,7 @@ import com.moqod.android.shaker.utils.ActivityInfoProvider;
 import com.moqod.android.shaker.utils.LogCatHelper;
 import com.moqod.android.shaker.utils.NotificationHelper;
 import com.moqod.android.shaker.utils.ScreenShotHelper;
+import com.moqod.android.shaker.utils.VersionProvider;
 import io.reactivex.Completable;
 import io.reactivex.CompletableEmitter;
 import io.reactivex.CompletableOnSubscribe;
@@ -37,16 +38,18 @@ public class ReportsInteractor {
     private ActivityInfoProvider<DeviceInfoModel> mDeviceInfoProvider;
     private LogCatHelper mLogCatHelper;
     private ReportUploader mReportUploader;
+    private VersionProvider mVersionProvider;
 
     public ReportsInteractor(ReportsRepository reportsRepository, NotificationHelper notificationHelper,
                              ScreenShotHelper screenShotHelper, ActivityInfoProvider<DeviceInfoModel> deviceInfoProvider,
-                             LogCatHelper logCatHelper, ReportUploader reportUploader) {
+                             LogCatHelper logCatHelper, ReportUploader reportUploader, VersionProvider versionProvider) {
         mReportsRepository = reportsRepository;
         mNotificationHelper = notificationHelper;
         mScreenShotHelper = screenShotHelper;
         mDeviceInfoProvider = deviceInfoProvider;
         mLogCatHelper = logCatHelper;
         mReportUploader = reportUploader;
+        mVersionProvider = versionProvider;
     }
 
     public void createReport(Activity activity) throws IOException {
@@ -54,7 +57,8 @@ public class ReportsInteractor {
         File logsFile = mLogCatHelper.captureLogsToFile();
 
         if (imageUri != null && logsFile != null) {
-            ReportModel report = mReportsRepository.put(ReportModel.create(new Date(), "", imageUri, logsFile.toString()));
+            String version = mVersionProvider.getVersion(activity);
+            ReportModel report = mReportsRepository.put(ReportModel.create(new Date(), version, "", imageUri, logsFile.toString()));
 
             if (report != null) {
                 mNotificationHelper.issueNotification(report.getId());
@@ -72,7 +76,8 @@ public class ReportsInteractor {
                     public CompletableSource apply(ReportModel model) throws Exception {
                         ReportModel updatedReport = model;
                         if (comment != null) {
-                            updatedReport = new ReportModel(model.getId(), model.getDate(), comment, model.getImageUri(), model.getLogsPath());
+                            updatedReport = new ReportModel(model.getId(), model.getDate(), model.getVersion(), comment,
+                                    model.getImageUri(), model.getLogsPath());
                         }
                         return mReportUploader.uploadReport(updatedReport, mDeviceInfoProvider.get())
                                 .flatMapCompletable(new Function<ReportModel, CompletableSource>() {

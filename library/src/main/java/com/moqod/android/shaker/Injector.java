@@ -17,6 +17,7 @@ import com.moqod.android.shaker.utils.DeviceInfoProvider;
 import com.moqod.android.shaker.utils.LogCatHelper;
 import com.moqod.android.shaker.utils.NotificationHelper;
 import com.moqod.android.shaker.utils.ScreenShotHelper;
+import com.moqod.android.shaker.utils.VersionProvider;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -78,7 +79,7 @@ public class Injector {
 
     public ReportsInteractor getReportsInteractor() {
         return new ReportsInteractor(getReportsRepository(), getNotificationHelper(), new ScreenShotHelper(mContext),
-                getDeviceInfoProvider(), new LogCatHelper(mContext), getReportUploader());
+                getDeviceInfoProvider(), new LogCatHelper(mContext), getReportUploader(), new VersionProvider());
     }
 
     public DeviceInfoProvider getDeviceInfoProvider() {

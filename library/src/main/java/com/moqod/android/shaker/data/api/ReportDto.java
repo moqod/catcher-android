@@ -12,20 +12,26 @@ import java.util.Date;
 public class ReportDto {
 
     private Date date;
+    private String version;
     private String comment;
     private DeviceInfoDto deviceInfo;
     private int screenshot;
     private int log;
     private String url;
 
-    public ReportDto(Date date, String comment, DeviceInfoDto deviceInfo) {
+    public ReportDto(Date date, String version, String comment, DeviceInfoDto deviceInfo) {
         this.date = date;
+        this.version = version;
         this.comment = comment;
         this.deviceInfo = deviceInfo;
     }
 
     public Date getDate() {
         return date;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
     public String getComment() {
