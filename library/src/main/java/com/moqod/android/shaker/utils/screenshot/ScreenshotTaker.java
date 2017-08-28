@@ -15,6 +15,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import com.moqod.android.shaker.Logger;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLContext;
@@ -47,7 +48,7 @@ public final class ScreenshotTaker {
         }
 
         final List<RootViewInfo> viewRoots = FieldHelper.getRootViews(activity);
-//        Logger.d("viewRoots count: " + viewRoots.size());
+        Logger.d("viewRoots count: " + viewRoots.size());
         View main = activity.getWindow().getDecorView();
 
         final Bitmap bitmap;
@@ -147,7 +148,7 @@ public final class ScreenshotTaker {
     }
 
     private static void drawGLSurfaceView(GLSurfaceView surfaceView, Canvas canvas) {
-//        Logger.d("Drawing GLSurfaceView");
+        Logger.d("Drawing GLSurfaceView");
 
         if (surfaceView.getWindowToken() != null) {
             int[] location = new int[2];
@@ -177,7 +178,7 @@ public final class ScreenshotTaker {
                     try {
                         Thread.sleep(200);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        Logger.e("GL interrupted");
                     }
 
                     gl.glReadPixels(x, 0, width, y + height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, ib);
@@ -188,7 +189,7 @@ public final class ScreenshotTaker {
             try {
                 countDownLatch.await();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Logger.e("GL interrupted");
             }
             int[] bt = new int[width * height];
             int i = 0;
@@ -213,7 +214,7 @@ public final class ScreenshotTaker {
 
     @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private static void drawTextureView(TextureView textureView, Canvas canvas) {
-//        Logger.d("Drawing TextureView");
+        Logger.d("Drawing TextureView");
 
         int[] textureViewLocation = new int[2];
         textureView.getLocationOnScreen(textureViewLocation);

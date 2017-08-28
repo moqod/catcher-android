@@ -13,30 +13,30 @@ public class Logger {
 
     private static final String TAG = "Shaker";
 
-    private static boolean ENABLED = false;
+    private static boolean sEnabled = false;
 
     public static void enable() {
-        ENABLED = true;
+        sEnabled = true;
     }
 
     public static void disable() {
-        ENABLED = false;
+        sEnabled = false;
     }
 
     public static void d(String message) {
-        if (ENABLED) {
+        if (sEnabled) {
             Log.d(TAG, message);
         }
     }
 
     public static void e(String message) {
-        if (ENABLED) {
+        if (sEnabled) {
             Log.d(TAG, message);
         }
     }
 
     public static void e(String message, Throwable throwable) {
-        if (ENABLED) {
+        if (sEnabled) {
             Log.d(TAG, message, throwable);
         }
     }
