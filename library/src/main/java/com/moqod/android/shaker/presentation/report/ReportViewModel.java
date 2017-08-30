@@ -53,6 +53,10 @@ public class ReportViewModel {
         return mModel.getLogsPath();
     }
 
+    public String getAppVersion() {
+        return mModel.getVersion();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

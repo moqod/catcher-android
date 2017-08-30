@@ -39,6 +39,7 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
     @Nullable private ReportPresenter mReportsPresenter;
 
     private TextView mDate;
+    private TextView mAppVersion;
     private TextView mDeviceInfo;
     private EditText mComment;
 
@@ -93,6 +94,7 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
         mModel = model;
         setTitle(getString(R.string.REPORT_TITLE, model.getId()));
         mDate.setText(mModel.getDate());
+        mAppVersion.setText(model.getAppVersion());
         mDeviceInfo.setText(model.getDeviceInfo());
         mComment.setText(model.getComment());
     }
@@ -114,6 +116,7 @@ public class ReportActivity extends AppCompatActivity implements ReportView {
 
     private void initViews() {
         mDate = findViewById(R.id.report_date);
+        mAppVersion = findViewById(R.id.report_app_version);
         mDeviceInfo = findViewById(R.id.report_device_info);
         mComment = findViewById(R.id.report_comment);
         findViewById(R.id.report_send).setOnClickListener(new View.OnClickListener() {
