@@ -38,12 +38,12 @@ public class NotificationHelper {
                 .setContentTitle(mContext.getString(R.string.NOTIFICATION_REPORT_CREATED))
                 .setContentText(mContext.getString(R.string.NOTIFICATION_REPORT_INFO))
                 .setContentIntent(openReportIntent)
-                .setSmallIcon(R.drawable.ic_send)
+                .setSmallIcon(R.drawable.ic_adb_white)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setDefaults(NotificationCompat.DEFAULT_SOUND)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setDeleteIntent(deleteReportIntent)
                 .addAction(R.drawable.ic_send, mContext.getString(R.string.GENERAL_SEND), sendReportIntent)
-                .addAction(R.drawable.ic_send, mContext.getString(R.string.GENERAL_DELETE), deleteReportIntent)
+                .addAction(R.drawable.ic_clear, mContext.getString(R.string.GENERAL_DELETE), deleteReportIntent)
                 .build();
 
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
