@@ -25,10 +25,14 @@ public class Catcher implements ShakeDetector.Listener, ActivityMonitor.OnAppFor
     private final ReportsInteractor mReportsInteractor;
 
     public static Catcher init(Context context, String apiToken) {
-        return new Catcher(context, apiToken);
+        return new Catcher(context, apiToken, 12);
     }
 
-    private Catcher(Context context, String token) {
+    public static Catcher init(Context context, String apiToken, int sensitivity) {
+        return new Catcher(context, apiToken, sensitivity);
+    }
+
+    private Catcher(Context context, String token, int sensitivity) {
         Injector.init(context, token);
 
         mReportsInteractor = Injector.getInstance().getReportsInteractor();
@@ -36,7 +40,7 @@ public class Catcher implements ShakeDetector.Listener, ActivityMonitor.OnAppFor
 
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mShakeDetector = new ShakeDetector(this);
-        mShakeDetector.setSensitivity(11);
+        mShakeDetector.setSensitivity(sensitivity);
 
         Application application = (Application) context.getApplicationContext();
         application.registerActivityLifecycleCallbacks(mActivityMonitor);
